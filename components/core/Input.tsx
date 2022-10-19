@@ -15,14 +15,14 @@ const Input = ({
   name,
   control,
   label,
-  defaultValue,
+  defaultValue = '',
   error,
   type
 }: InputProps) => {
   return (
     <Controller
       name={name}
-      defaultValue={defaultValue || ''}
+      defaultValue={defaultValue}
       control={control}
       render={({ field }) => (
         <TextField

@@ -5,9 +5,7 @@ import { ReactNode } from 'react'
 const SignIn = () => {
   return (
     <div>
-      <div>
-        <SignInForm />
-      </div>
+      <SignInForm />
     </div>
   )
 }

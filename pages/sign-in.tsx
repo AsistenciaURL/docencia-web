@@ -1,8 +1,15 @@
+import { ReactNode, useEffect } from 'react'
+
 import SignInForm from 'components/signIn/SignInForm'
+import { signOut } from 'firebase/auth'
 import Empty from 'layouts/Empty'
-import { ReactNode } from 'react'
+import { auth } from 'services/Firebase'
 
 const SignIn = () => {
+  useEffect(() => {
+    signOut(auth)
+  }, [])
+
   return (
     <div>
       <SignInForm />

@@ -2,7 +2,6 @@ import { useState } from 'react'
 
 import { Button, Typography } from '@mui/material'
 import { useForm } from 'react-hook-form'
-import { useRouter } from 'next/router'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 

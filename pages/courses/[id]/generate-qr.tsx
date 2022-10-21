@@ -27,8 +27,8 @@ const GenerateQR = ({ id }: { id: string }) => {
   const handleChange = (newValue: Dayjs | null) => {
     if (newValue) {
       setValue(newValue)
-      const datetime = newValue.format('YYYY-MM-DD HH:mm:ss')
-      const assistanceUrl = id + datetime
+      // const datetime = newValue.format('YYYY-MM-DD HH:mm:ss')
+      // const assistanceUrl = id + datetime
       // setGeneratedQR(`http://localhost:3000/assistance/${assistanceUrl}`)
     }
   }

@@ -4,7 +4,7 @@ import { ServerStyleSheets } from '@mui/styles'
 import Document, { Html, Head, Main, NextScript } from 'next/document'
 
 class MyDocument extends Document {
-  render () {
+  render() {
     return (
       <Html>
         <Head>
@@ -52,7 +52,10 @@ MyDocument.getInitialProps = async (ctx) => {
 
   return {
     ...initialProps,
-    styles: [...React.Children.toArray(initialProps.styles), sheets.getStyleElement()]
+    styles: [
+      ...React.Children.toArray(initialProps.styles),
+      sheets.getStyleElement()
+    ]
   }
 }
 

@@ -75,46 +75,56 @@ const SignUpForm = () => {
   }
 
   return (
-    <>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Input
-          control={control}
-          label="Carnet"
-          name="carnet"
-          error={errors.carnet}
-        />
-        <Input
-          control={control}
-          label="Nombre"
-          name="name"
-          error={errors.name}
-        />
-        <Input
-          control={control}
-          label="Correo Electrónico"
-          name="email"
-          type="email"
-          error={errors.email}
-        />
-        <Input
-          control={control}
-          label="Contraseña"
-          name="password"
-          type="password"
-          error={errors.password}
-        />
-        <Input
-          control={control}
-          label="Repetir contraseña"
-          name="passwordConfirm"
-          type="password"
-          error={errors.passwordConfirm}
-        />
-        <Button type="submit">
-          {loading ? 'Cargando...' : 'Crear usuario'}
-        </Button>
-      </form>
-    </>
+    <div className="grid place-items-center h-screen ">
+      <div className="block rounded-lg shadow-lg bg-white max-w-sm min-w-[50%] p-3 pt-7">
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <p className="text-lg font-bold text-[#082E71]">Carnet</p>
+          <Input
+            control={control}
+            label="Carnet"
+            name="carnet"
+            error={errors.carnet}
+          />
+          <p className="text-lg font-bold text-[#082E71]">Nombre</p>
+          <Input
+            control={control}
+            label="Nombre"
+            name="name"
+            error={errors.name}
+          />
+          <p className="text-lg font-bold text-[#082E71]">Email</p>
+          <Input
+            control={control}
+            label="Correo Electrónico"
+            name="email"
+            type="email"
+            error={errors.email}
+          />
+          <p className="text-lg font-bold text-[#082E71]">Contraseña</p>
+          <Input
+            control={control}
+            label="Contraseña"
+            name="password"
+            type="password"
+            error={errors.password}
+          />
+          <p className="text-lg font-bold text-[#082E71]">Repetir contraseña</p>
+          <Input
+            control={control}
+            label="Repetir contraseña"
+            name="passwordConfirm"
+            type="password"
+            error={errors.passwordConfirm}
+          />
+          <Button
+            className="text-white bg-[#082E71] hover:bg-white hover:text-[#082E71] font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+            type="submit"
+          >
+            {loading ? 'Cargando...' : 'Crear usuario'}
+          </Button>
+        </form>
+      </div>
+    </div>
   )
 }
 

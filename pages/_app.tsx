@@ -1,4 +1,5 @@
 import type { ReactElement, ReactNode } from 'react'
+import React, { useEffect } from 'react';
 import type { AppProps } from 'next/app'
 import { NextPage } from 'next'
 import '../styles/globals.css'
@@ -18,6 +19,12 @@ type LayoutProps = AppProps & {
 
 const MyApp = ({ Component, pageProps }: LayoutProps) => {
   const layout = Component.layout ?? ((page) => <Default>{page}</Default>)
+  useEffect(() => {
+    const jssStyles = document.querySelector('#jss-server-side')
+    if (jssStyles) {
+      jssStyles.parentElement!.removeChild(jssStyles)
+    }
+  }, [])
 
   return (
     <SessionProvider>

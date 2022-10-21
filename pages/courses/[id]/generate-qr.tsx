@@ -6,6 +6,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import dayjs, { Dayjs } from 'dayjs'
 import QRCode from 'react-qr-code'
+import useQR from 'hooks/useQR'
 
 export async function getServerSideProps({ query }: { query: { id: string } }) {
   const { id } = query
@@ -16,16 +17,27 @@ export async function getServerSideProps({ query }: { query: { id: string } }) {
 
 const GenerateQR = ({ id }: { id: string }) => {
   const [generatedQR, setGeneratedQR] = useState<string | undefined>(undefined)
+  const [show, setShow] = useState(false)
   const [value, setValue] = useState<Dayjs | null>(
     dayjs(new Date().toISOString())
   )
+
+  const { createQR } = useQR()
 
   const handleChange = (newValue: Dayjs | null) => {
     if (newValue) {
       setValue(newValue)
       const datetime = newValue.format('YYYY-MM-DD HH:mm:ss')
       const assistanceUrl = id + datetime
-      setGeneratedQR(`http://localhost:3000/assistance/${assistanceUrl}`)
+      // setGeneratedQR(`http://localhost:3000/assistance/${assistanceUrl}`)
+    }
+  }
+
+  const generate = async () => {
+    setShow(true)
+    const response = await createQR(id)
+    if (response.status === 'success') {
+      setGeneratedQR(`http://localhost:3000/assistance/${response.message}`)
     }
   }
 
@@ -41,7 +53,8 @@ const GenerateQR = ({ id }: { id: string }) => {
         />
       </LocalizationProvider>
       <div className="w-screen flex justify-center">
-        {generatedQR && <QRCode value={generatedQR} />}
+        <Button onClick={() => generate()}>Generar QR</Button>
+        {show && generatedQR && <QRCode value={generatedQR} />}
       </div>
     </div>
   )

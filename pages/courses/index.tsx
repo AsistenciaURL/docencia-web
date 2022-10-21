@@ -35,6 +35,7 @@ const CoursesList = () => {
           </Button>
         </div>
       ))}
+
       <Button onClick={() => router.push('/courses/new')}>Nuevo curso</Button>
     </div>
   )

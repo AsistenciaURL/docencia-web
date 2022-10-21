@@ -30,10 +30,10 @@ const useCourses = () => {
       const response = await fetch(
         `${_url}/Curso/`,
         postOptions({
-          Nombre: 'Ingeniería de Software 1',
-          Seccion: 1,
+          Nombre: name,
+          Seccion: section,
           Anio: '2022-12-12',
-          TotalClases: 40,
+          TotalClases: total,
           Ciclo_idciclo: 1,
           Facultad_idFacultad: 1,
           Docente_Carnet: session.uid

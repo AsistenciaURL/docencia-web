@@ -1,3 +1,6 @@
+import { Button } from '@mui/material'
+import { useRouter } from 'next/router'
+
 export async function getServerSideProps({ query }: { query: { id: string } }) {
   const { id } = query
   return {
@@ -6,9 +9,14 @@ export async function getServerSideProps({ query }: { query: { id: string } }) {
 }
 
 const Course = ({ id }: { id: string }) => {
+  const router = useRouter()
+
   return (
     <div>
-      <div>Test</div>
+      <div>{id}</div>
+      <Button onClick={() => router.push(`/courses/${id}/generate-qr`)}>
+        Generar QR
+      </Button>
     </div>
   )
 }

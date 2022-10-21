@@ -11,6 +11,7 @@ import {
 } from 'firebase/auth'
 
 import { auth } from 'services/Firebase'
+import { postOptions, _url } from 'services/Connection'
 import { HookResponse } from './types'
 
 const useAuth = () => {
@@ -59,10 +60,21 @@ const useAuth = () => {
   const createUser = async (
     email: string,
     password: string,
-    name: string
+    name: string,
+    carnet: string
   ): Promise<HookResponse> => {
     try {
-      await createUserWithEmailAndPassword(auth, email, password)
+      const user = await createUserWithEmailAndPassword(auth, email, password)
+      await fetch(
+        `${_url}/Docente/`,
+        postOptions({
+          carnet,
+          nombre: name,
+          correo: email,
+          firebaseid: user.user.uid
+        })
+      )
+
       return {
         status: 'success'
       }

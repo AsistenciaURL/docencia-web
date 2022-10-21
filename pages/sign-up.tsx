@@ -1,7 +1,9 @@
 import { ReactNode, useEffect } from 'react'
+
+import { auth } from 'services/Firebase'
+import { signOut } from 'firebase/auth'
 import Empty from 'layouts/Empty'
 import SignUpForm from 'components/signUp/SignUpForm'
-import { signOut } from 'firebase/auth'
 
 const SignUp = () => {
   useEffect(() => {

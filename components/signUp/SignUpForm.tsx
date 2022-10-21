@@ -15,15 +15,20 @@ type FormValues = {
   name: string
   password: string
   passwordConfirm: string
+  carnet: string
 }
 
 const schema = yup.object().shape({
-  email: yup.string().email('Debe ser un correo válido').required(''),
+  email: yup
+    .string()
+    .email('Debe ser un correo válido')
+    .required('Es necesario ingresar un correo'),
   password: yup
     .string()
     .min(6, 'La contraseña debe tener mínimo 6 carácteres')
-    .required(''),
-  name: yup.string().required('')
+    .required('Es necesario ingresar una contraseña'),
+  name: yup.string().required('Es necesario ingresar un nombre'),
+  carnet: yup.string().required('Es necesario ingresar un carnet')
 })
 
 const SignUpForm = () => {
@@ -46,7 +51,8 @@ const SignUpForm = () => {
       const response: HookResponse = await createUser(
         data.email,
         data.password,
-        data.name
+        data.name,
+        data.carnet
       )
       if (response.status === 'success') {
         openSnackbar({
@@ -71,6 +77,12 @@ const SignUpForm = () => {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
+        <Input
+          control={control}
+          label="Carnet"
+          name="carnet"
+          error={errors.carnet}
+        />
         <Input
           control={control}
           label="Nombre"

@@ -1,4 +1,6 @@
-import { Button } from '@mui/material'
+import { useState } from 'react'
+
+import { Button, Typography } from '@mui/material'
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -17,16 +19,17 @@ const schema = yup.object().shape({
 })
 
 const AssistanceForm = ({ id }: { id: string }) => {
-  const { assist } = useAssistance()
+  const [success, setSuccess] = useState(false)
+  const { createAssistance } = useAssistance()
 
   const { control, handleSubmit } = useForm<FormValues>({
     resolver: yupResolver(schema)
   })
 
   const onSubmit = async (data: FormValues) => {
-    const response: HookResponse = await assist(data.carnet, id)
+    const response: HookResponse = await createAssistance(data.carnet, id)
     if (response.status === 'success') {
-      console.log('Success')
+      setSuccess(true)
     }
   }
 
@@ -35,6 +38,7 @@ const AssistanceForm = ({ id }: { id: string }) => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <Input control={control} label="Carnet" name="carnet" />
         <Button type="submit">Enviar Asistencia</Button>
+        {success && <Typography>ASISTENCIA ENVIADA CORRECTAMENTE</Typography>}
       </form>
     </>
   )

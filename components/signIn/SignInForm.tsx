@@ -8,6 +8,7 @@ import { HookResponse } from 'hooks/types'
 import Checkbox from 'components/core/Checkbox'
 import Input from 'components/core/Input'
 import useAuth from 'hooks/useAuth'
+import SelectInput from '@mui/material/Select/SelectInput'
 
 type FormValues = {
   email: string

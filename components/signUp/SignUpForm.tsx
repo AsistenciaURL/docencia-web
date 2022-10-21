@@ -78,13 +78,6 @@ const SignUpForm = () => {
     <div className="grid place-items-center h-screen ">
       <div className="block rounded-lg shadow-lg bg-white max-w-sm min-w-[50%] p-3 pt-7">
         <form onSubmit={handleSubmit(onSubmit)}>
-          <p className="text-lg font-bold text-[#082E71]">Carnet</p>
-          <Input
-            control={control}
-            label="Carnet"
-            name="carnet"
-            error={errors.carnet}
-          />
           <p className="text-lg font-bold text-[#082E71]">Nombre</p>
           <Input
             control={control}

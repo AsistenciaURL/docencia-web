@@ -3,7 +3,6 @@ import { ReactNode, useEffect } from 'react'
 import SignInForm from 'components/signIn/SignInForm'
 import { signOut } from 'firebase/auth'
 import Empty from 'layouts/Empty'
-import Image from 'next/image'
 import { auth } from 'services/Firebase'
 
 const SignIn = () => {

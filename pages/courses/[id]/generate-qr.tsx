@@ -31,7 +31,6 @@ const GenerateQR = ({ id }: { id: string }) => {
 
   return (
     <div>
-      <Button>Test</Button>
       <div>2022-10-20 21:10:21</div>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <TimePicker
@@ -41,7 +40,9 @@ const GenerateQR = ({ id }: { id: string }) => {
           renderInput={(params) => <TextField {...params} />}
         />
       </LocalizationProvider>
-      {generatedQR && <QRCode value={generatedQR} />}
+      <div className="w-screen flex justify-center">
+        {generatedQR && <QRCode value={generatedQR} />}
+      </div>
     </div>
   )
 }

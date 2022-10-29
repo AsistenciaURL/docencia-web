@@ -1,7 +1,9 @@
-import { postOptions, _url } from 'services/Connection'
+import { fetchAPI } from 'services/Connection'
 import { HookResponse } from './types'
+import CourseStudent from './types/CouseStudent'
+import Student from './types/Student'
 
-type Student = {
+type XslxStudent = {
   'No. Carnet': number
   'Nombre completo': string
   Carrera: string
@@ -11,29 +13,32 @@ type Student = {
 
 const useStudents = () => {
   const createStudents = async (
-    students: Student[],
-    id: string
+    students: XslxStudent[],
+    id: number
   ): Promise<HookResponse> => {
     for (const student of students) {
-      try {
-        await fetch(
-          `${_url}/Estudiantes/`,
-          postOptions({
-            Carnet: student['No. Carnet'],
-            Nombre: student['Nombre completo'],
-            Correo: student['Cuenta oficial URL'],
-            Facultad_idFacultad: 1
-          })
+      const response = await fetchAPI<Student>('student', 'POST', {
+        id: student['No. Carnet'],
+        name: student['Nombre completo'],
+        email: student['Cuenta oficial URL'],
+        faculty_id: 1
+      })
+
+      if (response.ok) {
+        const response = await fetchAPI<CourseStudent>(
+          'course_student',
+          'POST',
+          {
+            course_id: id,
+            student_id: student['No. Carnet']
+          }
         )
-        await fetch(
-          `${_url}/Curso_has_estudiante/`,
-          postOptions({
-            Curso_idCurso: id,
-            Estudiante_carnet: student['No. Carnet']
-          })
-        )
-      } catch (e) {
-        console.log(e)
+        if (response.ok) {
+          return {
+            status: 'success',
+            message: 'Estudiantes guardados correctamente'
+          }
+        }
       }
     }
     return {

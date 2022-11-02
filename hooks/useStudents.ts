@@ -3,7 +3,7 @@ import CourseStudent from './types/CouseStudent'
 import Student from './types/Student'
 
 type XslxStudent = {
-  'No. Carnet': number
+  'No. Carnet': string
   'Nombre completo': string
   Carrera: string
   'Cuenta oficial URL': string

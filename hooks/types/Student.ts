@@ -1,5 +1,5 @@
 type Student = {
-  id?: number
+  id?: string
   name: string
   email: string
   faculty_id: number

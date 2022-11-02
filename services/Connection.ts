@@ -37,7 +37,7 @@ export const fetchAPI = async <T>(
     if (response.ok) {
       return {
         status: 'success',
-        message: message,
+        message,
         data
       }
     } else {

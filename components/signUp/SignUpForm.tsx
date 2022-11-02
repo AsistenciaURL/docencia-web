@@ -9,6 +9,8 @@ import Input from 'components/core/Input'
 import useAuth from 'hooks/useAuth'
 import { useContext } from 'react'
 import { SnackbarContext } from 'context/SnackbarProvider'
+import { ApiResponse } from 'services/Connection'
+import Professor from 'hooks/types/Professor'
 
 type FormValues = {
   email: string
@@ -48,24 +50,17 @@ const SignUpForm = () => {
 
   const onSubmit = async (data: FormValues) => {
     if (data.password === data.passwordConfirm) {
-      const response: HookResponse = await createUser(
+      const response: ApiResponse<Professor> = await createUser(
         data.email,
         data.password,
         data.name,
         data.carnet
       )
-      if (response.status === 'success') {
-        openSnackbar({
-          message: 'Usuario creado correctamente',
-          severity: 'success'
-        })
-        router.push('/sign-in')
-      } else {
-        openSnackbar({
-          message: response.message,
-          severity: 'error'
-        })
-      }
+      openSnackbar({
+        message: response.message,
+        severity: response.status
+      })
+      router.push('/sign-in')
     } else {
       openSnackbar({
         message: 'Las contraseñas no coinciden',

@@ -24,7 +24,7 @@ export default function Snackbar() {
         elevation={6}
         onClose={handleClose}
         severity={snackbar.severity}
-        variant="outlined"
+        variant="filled"
       >
         {snackbar.message}
       </Alert>

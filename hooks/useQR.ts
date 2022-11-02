@@ -1,34 +1,18 @@
-import { postOptions, _url } from 'services/Connection'
+import { useState } from 'react'
+import { ApiResponse, fetchAPI } from 'services/Connection'
+import Qr from './types/Qr'
 
 const useQR = () => {
-  const createQR = async (id: string) => {
-    try {
-      const response = await fetch(
-        `${_url}/Qr/`,
-        postOptions({
-          FechaLimite: '2023-12-12',
-          Curso_idCurso: id
-        })
-      )
-      const data = await response.json()
-      console.log(data)
+  const [loading, setLoading] = useState(false)
+  const createQR = async (id: number): Promise<ApiResponse<Qr>> => {
+    setLoading(true)
+    const response = await fetchAPI<Qr>('qr', 'POST', {
+      limit_date: '2023-12-12',
+      course_id: id
+    })
+    setLoading(false)
 
-      if (response.ok) {
-        return {
-          message: data.idQr,
-          status: 'success'
-        }
-      }
-      return {
-        message: 'Hubo un error al crear el QR',
-        status: 'error'
-      }
-    } catch (error: any) {
-      return {
-        message: error.message,
-        status: 'error'
-      }
-    }
+    return response
   }
 
   return {

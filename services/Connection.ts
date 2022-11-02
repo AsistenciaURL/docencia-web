@@ -14,27 +14,46 @@ type Tables =
   | 'course_student'
   | 'assistance_category'
 
+export type ApiResponse<T = void> = {
+  data?: T[] | T
+  status: 'success' | 'error'
+  message?: string
+}
+
 export const fetchAPI = async <T>(
   table: Tables,
   method: Methods = 'GET',
-  body?: T
-) => {
+  body?: T,
+  message: string = 'Datos guardados correctamente'
+): Promise<ApiResponse<T>> => {
   try {
     const response = await fetch(`${_url}/${table}/`, {
       method,
       body: JSON.stringify(body),
       headers: { 'Content-Type': 'application/json' }
     })
-    const data: T = await response.json()
+    const data: T[] | T = await response.json()
 
-    return {
-      ok: response.ok,
-      data
+    if (response.ok) {
+      return {
+        status: 'success',
+        message: message,
+        data
+      }
+    } else {
+      console.log(response)
+      const error = await response.json()
+      console.log(error)
+      return {
+        status: 'error',
+        message: 'Hubo un error desconocido'
+      }
     }
   } catch (error) {
     console.log(error)
     return {
-      ok: false
+      status: 'error',
+      message: 'Hubo un error al crear la petición'
     }
   }
 }

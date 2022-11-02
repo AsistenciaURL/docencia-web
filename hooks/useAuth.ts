@@ -11,8 +11,8 @@ import {
 } from 'firebase/auth'
 
 import { auth } from 'services/Firebase'
-import { postOptions, _url } from 'services/Connection'
-import { HookResponse } from './types'
+import { ApiResponse, fetchAPI } from 'services/Connection'
+import Professor from './types/Professor'
 
 const useAuth = () => {
   const [loading, setLoading] = useState(false)
@@ -30,7 +30,7 @@ const useAuth = () => {
     email: string,
     password: string,
     remember: boolean
-  ): Promise<HookResponse> => {
+  ): Promise<ApiResponse> => {
     setLoading(true)
     await setPersistence(
       auth,
@@ -62,26 +62,20 @@ const useAuth = () => {
     password: string,
     name: string,
     carnet: string
-  ): Promise<HookResponse> => {
-    try {
-      const user = await createUserWithEmailAndPassword(auth, email, password)
-      await fetch(
-        `${_url}/Docente/`,
-        postOptions({
-          carnet,
-          nombre: name,
-          correo: email,
-          firebaseid: user.user.uid
-        })
-      )
-
+  ): Promise<ApiResponse<Professor>> => {
+    const { user } = await createUserWithEmailAndPassword(auth, email, password)
+    if (user.uid) {
+      const response = await fetchAPI<Professor>('professor', 'POST', {
+        carnet,
+        email,
+        name,
+        id: user.uid
+      })
+      return response
+    } else {
       return {
-        status: 'success'
-      }
-    } catch (error: any) {
-      return {
-        message: error.message,
-        status: 'error'
+        status: 'error',
+        message: 'Hubo un error al crear el catedrático'
       }
     }
   }

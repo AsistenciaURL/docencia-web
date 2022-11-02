@@ -1,5 +1,4 @@
-import { fetchAPI } from 'services/Connection'
-import { HookResponse } from './types'
+import { ApiResponse, fetchAPI } from 'services/Connection'
 import CourseStudent from './types/CouseStudent'
 import Student from './types/Student'
 
@@ -15,7 +14,7 @@ const useStudents = () => {
   const createStudents = async (
     students: XslxStudent[],
     id: number
-  ): Promise<HookResponse> => {
+  ): Promise<ApiResponse> => {
     for (const student of students) {
       const response = await fetchAPI<Student>('student', 'POST', {
         id: student['No. Carnet'],
@@ -24,7 +23,7 @@ const useStudents = () => {
         faculty_id: 1
       })
 
-      if (response.ok) {
+      if (response.status === 'success') {
         const response = await fetchAPI<CourseStudent>(
           'course_student',
           'POST',
@@ -33,16 +32,14 @@ const useStudents = () => {
             student_id: student['No. Carnet']
           }
         )
-        if (response.ok) {
-          return {
-            status: 'success',
-            message: 'Estudiantes guardados correctamente'
-          }
+        if (response.status === 'error') {
+          console.log('Error')
         }
       }
     }
     return {
-      status: 'success'
+      status: 'success',
+      message: 'Estudiantes guardados correctamente'
     }
   }
 

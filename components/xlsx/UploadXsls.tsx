@@ -1,5 +1,4 @@
 import { Button } from '@mui/material'
-import { HookResponse } from 'hooks/types'
 import useStudents from 'hooks/useStudents'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
@@ -14,11 +13,11 @@ type Student = {
 }
 
 type Props = {
-  id: string
+  id: number
 }
 
 const UploadXsls = ({ id }: Props) => {
-  const [students, setStudents] = useState<Student[]>([])
+  const [students, setStudents] = useState<any[]>([])
 
   const { createStudents } = useStudents()
   const router = useRouter()
@@ -40,7 +39,7 @@ const UploadXsls = ({ id }: Props) => {
   }
 
   const confirmStudents = async () => {
-    const response: HookResponse = await createStudents(students, id)
+    const response = await createStudents(students, id)
     if (response.status === 'success') {
       router.reload()
     }

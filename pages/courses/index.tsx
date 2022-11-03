@@ -1,23 +1,17 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect } from 'react'
 
 import { Button } from '@mui/material'
 import { useRouter } from 'next/router'
-import { _url } from 'services/Connection'
 import { SessionContext } from 'context/AuthProvider'
+import useCourses from 'hooks/useCourses'
 
 const CoursesList = () => {
-  const [courses, setCourses] = useState([])
   const { session } = useContext(SessionContext)
+  const { courses, getCourses } = useCourses()
   const router = useRouter()
 
   useEffect(() => {
-    fetch(`${_url}/Curso/`)
-      .then((response) => response.json())
-      .then((data) =>
-        setCourses(
-          data.filter((course: any) => course.Docente_Carnet === session.uid)
-        )
-      )
+    getCourses()
   }, [])
 
   useEffect(() => {
@@ -27,10 +21,10 @@ const CoursesList = () => {
   return (
     <div>
       <div>Lista de cursos</div>
-      {courses.map((course: any) => (
-        <div key={course.idCurso} className="flex">
-          <div>{course.Nombre}</div>
-          <Button onClick={() => router.push(`/courses/${course.idCurso}`)}>
+      {courses.map((course) => (
+        <div key={course.id} className="flex">
+          <div>{course.name}</div>
+          <Button onClick={() => router.push(`/courses/${course.id}`)}>
             Ver detalles
           </Button>
         </div>

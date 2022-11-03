@@ -14,7 +14,7 @@ const useStudents = () => {
   const createStudents = async (
     students: XslxStudent[],
     id: number
-  ): Promise<ApiResponse> => {
+  ): Promise<ApiResponse<Student>> => {
     for (const student of students) {
       const response = await fetchAPI<Student>('student', 'POST', {
         id: student['No. Carnet'],

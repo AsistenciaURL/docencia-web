@@ -1,8 +1,8 @@
 import { Button } from '@mui/material'
 import UploadXsls from 'components/xlsx/UploadXsls'
+import useCourses from 'hooks/useCourses'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
-import { _url } from 'services/Connection'
+import { useEffect } from 'react'
 
 export async function getServerSideProps({ query }: { query: { id: string } }) {
   const { id } = query
@@ -11,28 +11,23 @@ export async function getServerSideProps({ query }: { query: { id: string } }) {
   }
 }
 
-const Course = ({ id }: { id: string }) => {
-  const [relations, setRelations] = useState([])
-  const [students, setStudents] = useState([])
+const Course = ({ id }: { id: number }) => {
+  const { getCourse, course } = useCourses()
+  // const [students, setStudents] = useState([])
   const router = useRouter()
 
   useEffect(() => {
-    fetch(`${_url}/Curso_has_estudiante/`)
-      .then((response) => response.json())
-      .then((data) => setRelations(data))
-    fetch(`${_url}/Estudiantes/`)
-      .then((response) => response.json())
-      .then((data) => setStudents(data))
+    getCourse(id)
   }, [])
 
   useEffect(() => {
-    console.log(students)
-    console.log(relations)
-  }, [students, relations])
+    console.log(course)
+  }, [course])
 
   return (
     <div>
       <div>{id}</div>
+      <div>{course.name}</div>
       <div className="bg-yellow-200">
         <div>Importar Estudiantes</div>
         <UploadXsls id={id} />
@@ -40,7 +35,7 @@ const Course = ({ id }: { id: string }) => {
       <div className="bg-red-200">
         <div>Estudiantes asignados</div>
         <div>
-          {relations.map((relation, index) => (
+          {/* {relations.map((relation, index) => (
             <div key={index}>
               {
                 students.find(
@@ -48,7 +43,7 @@ const Course = ({ id }: { id: string }) => {
                 )?.Nombre
               }
             </div>
-          ))}
+          ))} */}
         </div>
       </div>
       <Button onClick={() => router.push(`/courses/${id}/generate-qr`)}>

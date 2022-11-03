@@ -11,8 +11,8 @@ const SignIn = () => {
   }, [])
 
   return (
-    <div className="container mx-auto">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2">
+    <div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2">
         <div className="grid place-items-center h-screen bg-gradient-to-r from-[#2c79ff] via-[#0e46a7] to-[#082E71] ">
           <div className="p-10">
             <p className="text-5xl text-left text-[#F3F4F6] font-bold">

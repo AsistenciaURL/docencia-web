@@ -13,16 +13,15 @@ export async function getServerSideProps({ query }: { query: { id: string } }) {
 
 const Course = ({ id }: { id: number }) => {
   const { getCourse, course } = useCourses()
-  // const [students, setStudents] = useState([])
   const router = useRouter()
 
   useEffect(() => {
     getCourse(id)
   }, [])
 
-  useEffect(() => {
-    console.log(course)
-  }, [course])
+  const reload = () => {
+    getCourse(id)
+  }
 
   return (
     <div>
@@ -30,20 +29,14 @@ const Course = ({ id }: { id: number }) => {
       <div>{course.name}</div>
       <div className="bg-yellow-200">
         <div>Importar Estudiantes</div>
-        <UploadXsls id={id} />
+        <UploadXsls id={id} reload={reload} />
       </div>
       <div className="bg-red-200">
         <div>Estudiantes asignados</div>
         <div>
-          {/* {relations.map((relation, index) => (
-            <div key={index}>
-              {
-                students.find(
-                  (student) => student.Carnet === relation.Estudiante_carnet
-                )?.Nombre
-              }
-            </div>
-          ))} */}
+          {course?.students?.map(({ student }, index) => (
+            <div key={index}>{student?.name}</div>
+          ))}
         </div>
       </div>
       <Button onClick={() => router.push(`/courses/${id}/generate-qr`)}>

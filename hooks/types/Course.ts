@@ -1,11 +1,15 @@
+import CourseStudent from './CourseStudent'
+
 type Course = {
   id?: number
   name: string
   section: number
-  class_total?: number
-  semester_id: number
-  faculty_id: number
-  professor_id: string
+  classTotal?: number
+  faculty: string
+  semester: string
+  professorId: string
+
+  students?: CourseStudent[]
 }
 
 export default Course

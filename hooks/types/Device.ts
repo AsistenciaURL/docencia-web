@@ -1,7 +1,8 @@
 type Device = {
   id?: number
   name: string
-  qr_id: number
+  qrId?: number
+  studentId?: string
 }
 
 export default Device

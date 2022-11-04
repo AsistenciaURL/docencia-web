@@ -11,10 +11,12 @@ import {
 } from 'firebase/auth'
 
 import { auth } from 'services/Firebase'
-import { ApiResponse, fetchAPI } from 'services/Connection'
-import Professor from './types/Professor'
+import { ApiResponse } from 'services/Connection'
+import useProfessors from './useProfessors'
 
 const useAuth = () => {
+  const { createProfessor } = useProfessors()
+
   const [loading, setLoading] = useState(false)
   const [currentUser, setCurrentUser] = useState<User | null | undefined>(
     undefined
@@ -46,7 +48,8 @@ const useAuth = () => {
       console.log(user)
       setLoading(false)
       return {
-        status: 'success'
+        status: 'success',
+        message: 'Bienvenido'
       }
     } catch (error: any) {
       setLoading(false)
@@ -62,10 +65,10 @@ const useAuth = () => {
     password: string,
     name: string,
     carnet: string
-  ): Promise<ApiResponse<Professor>> => {
+  ) => {
     const { user } = await createUserWithEmailAndPassword(auth, email, password)
     if (user.uid) {
-      const response = await fetchAPI<Professor>('professor', 'POST', {
+      const response = await createProfessor({
         carnet,
         email,
         name,

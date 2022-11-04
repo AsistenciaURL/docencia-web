@@ -1,22 +1,26 @@
-export const _url = 'http://127.0.0.1:8000/api/v1'
+export const _url = 'http://localhost:8000'
 
 type Methods = 'GET' | 'POST'
 
 type Tables =
-  | 'student'
-  | 'professor'
-  | 'semester'
-  | 'course'
-  | 'qr'
-  | 'device'
-  | 'device'
-  | 'assistance'
-  | 'faculty'
-  | 'course_student'
-  | 'assistance_category'
+  | 'students'
+  | 'professors'
+  | 'semesters'
+  | 'courses'
+  | 'qrs'
+  | 'devices'
+  | 'assistances'
+  | 'courseStudents'
+  | 'assistanceCategories'
 
 export type ApiResponse<T = void> = {
   data?: T[]
+  status: 'success' | 'error'
+  message?: string
+}
+
+export type ApiResponsePost<T = void> = {
+  data?: T
   status: 'success' | 'error'
   message?: string
 }
@@ -39,7 +43,7 @@ export const fetchAPI = async <T>(
       body: JSON.stringify(body),
       headers: { 'Content-Type': 'application/json' }
     })
-    const data: T[] = await response.json()
+    const data: T[] = (await response.json()).data
 
     if (response.ok) {
       return {
@@ -65,6 +69,52 @@ export const fetchAPI = async <T>(
   }
 }
 
+export const fetchCustomAPI = async (
+  query: string,
+  method: Methods = 'GET',
+  body?: any,
+  message: string = 'Datos guardados correctamente'
+): Promise<ApiResponse> => {
+  try {
+    const response = await fetch(`${_url}/${query}`, {
+      method,
+      body: JSON.stringify(body),
+      headers: { 'Content-Type': 'application/json' }
+    })
+    const data: ApiResponse = await response.json()
+    return data
+  } catch (error) {
+    console.log(error)
+    return {
+      status: 'error',
+      message: 'Hubo un error al crear la petición'
+    }
+  }
+}
+
+export const fetchPostAPI = async <T>(
+  table: Tables,
+  body?: T,
+  message: string = 'Datos guardados correctamente'
+): Promise<ApiResponsePost<T>> => {
+  try {
+    console.log(JSON.stringify(body))
+    const response = await fetch(`${_url}/${table}/`, {
+      method: 'POST',
+      body: JSON.stringify(body),
+      headers: { 'Content-Type': 'application/json' }
+    })
+    const data: ApiResponsePost<T> = await response.json()
+    return data
+  } catch (error) {
+    console.log(error)
+    return {
+      status: 'error',
+      message: 'Hubo un error al crear la petición'
+    }
+  }
+}
+
 export const fetchSingleAPI = async <T>(
   table: Tables,
   id: string | number,
@@ -74,23 +124,8 @@ export const fetchSingleAPI = async <T>(
     const response = await fetch(`${_url}/${table}/${id}`, {
       headers: { 'Content-Type': 'application/json' }
     })
-    const data: T = await response.json()
-
-    if (response.ok) {
-      return {
-        status: 'success',
-        message,
-        data
-      }
-    } else {
-      console.log(response)
-      const error = await response.json()
-      console.log(error)
-      return {
-        status: 'error',
-        message: 'Hubo un error desconocido'
-      }
-    }
+    const data: ApiResponseSingle<T> = await response.json()
+    return data
   } catch (error) {
     console.log(error)
     return {

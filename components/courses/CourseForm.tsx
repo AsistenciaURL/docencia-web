@@ -14,25 +14,24 @@ import { ApiResponse, fetchAPI } from 'services/Connection'
 import Semester from 'hooks/types/Semester'
 import Faculty from 'hooks/types/Faculty'
 import Course from 'hooks/types/Course'
+import semesters from './Semesters'
+import faculties from './Faculties'
 
 type FormValues = {
   name: string
   section: number
-  semester: number
-  faculty: number
+  semester: string
+  faculty: string
 }
 
 const schema = yup.object().shape({
   name: yup.string().required('Es neceasrio ingresar un nombre'),
   section: yup.number().required('Es necesario ingresar una sección'),
-  semester: yup.number().required('Es necesario ingresar un ciclo'),
-  faculty: yup.number().required('Es necesario ingresar una facultad')
+  semester: yup.string().required('Es necesario ingresar un ciclo'),
+  faculty: yup.string().required('Es necesario ingresar una facultad')
 })
 
 const CourseForm = () => {
-  const [semesters, setSemesters] = useState<Semester[]>([])
-  const [faculties, setFaculties] = useState<Faculty[]>([])
-
   const { openSnackbar } = useContext(SnackbarContext)
   const { session } = useContext(SessionContext)
   const { loading, createCourse } = useCourses()
@@ -48,24 +47,12 @@ const CourseForm = () => {
     resolver: yupResolver(schema)
   })
 
-  useEffect(() => {
-    getFields()
-  }, [])
-
-  const getFields = async () => {
-    const semesterData = await fetchAPI<Semester>('semester', 'GET')
-    const facultyData = await fetchAPI<Semester>('faculty', 'GET')
-    setSemesters(semesterData.data!)
-    setFaculties(facultyData.data!)
-  }
-
   const onSubmit = async (data: FormValues) => {
-    console.log(data)
     if (session.uid) {
       const response: ApiResponse<Course> = await createCourse({
-        faculty_id: data.faculty,
-        professor_id: session.uid,
-        semester_id: data.semester,
+        faculty: data.faculty,
+        professor: session.uid,
+        semester: data.semester,
         name: data.name,
         section: data.section
       })
@@ -106,7 +93,7 @@ const CourseForm = () => {
         error={errors.semester}
       >
         {semesters.map((semester, index) => (
-          <MenuItem key={index} value={semester.id}>
+          <MenuItem key={index} value={semester.name}>
             {semester.name}
           </MenuItem>
         ))}
@@ -118,7 +105,7 @@ const CourseForm = () => {
         error={errors.faculty}
       >
         {faculties.map((faculty, index) => (
-          <MenuItem key={index} value={faculty.id}>
+          <MenuItem key={index} value={faculty.name}>
             {faculty.name}
           </MenuItem>
         ))}

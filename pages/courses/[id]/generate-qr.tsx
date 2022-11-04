@@ -55,8 +55,12 @@ const GenerateQR = ({ id }: { id: number }) => {
           coords.latitude,
           coords.longitude
         )
-        if (response.status === 'success') {
-          setGeneratedQR(`http://localhost:3000/assistance/${response.message}`)
+        if (response.status === 'success' && response.data) {
+          setGeneratedQR(`http://localhost:3000/assistance/${response.data.id}`)
+          openSnackbar({
+            message: 'QR generado correctamente',
+            severity: 'success'
+          })
         } else {
           openSnackbar({
             message: 'Hubo un error al crear el QR',

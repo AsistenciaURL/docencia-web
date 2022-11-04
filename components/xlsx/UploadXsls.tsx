@@ -14,13 +14,13 @@ type Student = {
 
 type Props = {
   id: number
+  reload: () => void
 }
 
-const UploadXsls = ({ id }: Props) => {
+const UploadXsls = ({ id, reload }: Props) => {
   const [students, setStudents] = useState<any[]>([])
 
   const { createStudents } = useStudents()
-  const router = useRouter()
 
   const readUploadFile = (e: any) => {
     e.preventDefault()
@@ -39,10 +39,8 @@ const UploadXsls = ({ id }: Props) => {
   }
 
   const confirmStudents = async () => {
-    const response = await createStudents(students, id)
-    if (response.status === 'success') {
-      router.reload()
-    }
+    await createStudents(students, id)
+    reload()
   }
 
   return (

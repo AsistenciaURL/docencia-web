@@ -1,8 +1,12 @@
+import CourseStudent from './CourseStudent'
+
 type Student = {
   id?: string
   name: string
   email: string
-  faculty_id: number
+  faculty?: string
+
+  courses?: CourseStudent[]
 }
 
 export default Student

@@ -1,6 +1,5 @@
 import { ReactNode, useEffect, useState } from 'react'
 
-import { useRouter } from 'next/router'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Divider from '@mui/material/Divider'
@@ -10,9 +9,10 @@ import Typography from '@mui/material/Typography'
 import AssistanceForm from 'components/assistance/AssitanceForm'
 import Empty from 'layouts/Empty'
 import PrimaryButton from 'components/core/PrimaryButton'
-import SecondaryButton from 'components/core/SecondaryButton'
 import StudentListItem from 'components/core/StudentListItem'
 import useDevices from 'hooks/useDevices'
+import useQR from 'hooks/useQR'
+import useAssistance from 'hooks/useAssistance'
 
 export async function getServerSideProps({
   query
@@ -33,37 +33,55 @@ const AssistenceSession = ({
   deviceId: string
 }) => {
   const [permission, setPermission] = useState(false)
-  const router = useRouter()
-  // const { getDevice, device } = useDevices()
-  const device = {
-    student: true
-  }
+  const [message, setMessage] = useState<boolean | string>(false)
+  const { getDevice, device } = useDevices()
+  const { getQrWithToken, deviceOnQr } = useQR()
+  const { createAssistance } = useAssistance()
 
   useEffect(() => {
     getPermission()
   }, [])
 
+  useEffect(() => {
+    console.log(deviceOnQr)
+  }, [deviceOnQr])
+
   const getPermission = async () => {
-    // const response = await fetch(
-    //   `${process.env.NEXT_PUBLIC_API_URL}/token/${token}`
-    // )
-    // const data = await response.json()
+    const response = await getQrWithToken(token)
 
-    // if (data.status === 'success') {
-    //   setPermission(true)
-    //   getDevice(deviceId)
-    // }
-    // if (data.status === 'error') {
-    //   router.push('/assistance/error')
-    // }
-    setPermission(true)
+    if (response.status === 'success') {
+      const responseDevice = await getDevice(deviceId)
+      if (responseDevice.status === 'error') {
+        setMessage('Este dispositivo no esta registrado')
+      } else {
+        setPermission(true)
+      }
+    }
+    if (response.status === 'error' || response.data?.deviceId !== deviceId) {
+      setMessage('No tiene permitido el acceso a la asistencia')
+    }
   }
 
-  const refetch = () => {
-    getDevice(deviceId)
+  const refetch = async () => {
+    await getDevice(deviceId)
   }
 
-  const confirmAssistance = () => {}
+  const confirmAssistance = async () => {
+    const response = await createAssistance(
+      {
+        assistanceCategoryId: 1,
+        courseId: deviceOnQr.qr?.courseId!,
+        date: new Date().toISOString(),
+        observations: '',
+        studentId: device.studentId!
+      },
+      token
+    )
+    console.log(response)
+    if (response.status === 'success') {
+      setMessage('Asistencia tomada correctamente')
+    }
+  }
 
   return (
     <div className="bg-gradient-to-r from-[#2c79ff] via-[#0e46a7] to-[#082E71] w-screen h-screen flex justify-center items-center">
@@ -71,42 +89,46 @@ const AssistenceSession = ({
         <Card>
           <Fade in={true}>
             <CardContent>
-              <Typography gutterBottom variant="h6" component="div">
-                {device && device.student
-                  ? 'Confirmar asistencia'
-                  : 'Ingrese el carnet para tomar asistencia'}
-              </Typography>
-              {device && device.student && (
-                <div>
-                  <Divider />
-                  <StudentListItem
-                    email="tatobig@gmail.com"
-                    id="1551619"
-                    name="Santiago Navas"
-                  />
-                </div>
-              )}
-
-              {permission ? (
-                <div>
-                  {device && device.student ? (
+              {!message && permission ? (
+                <>
+                  <Typography gutterBottom variant="h6" component="div">
+                    {device && device.student
+                      ? 'Confirmar asistencia'
+                      : 'Ingrese el carnet para tomar asistencia'}
+                  </Typography>
+                  {device && device.student && (
                     <div>
-                      <PrimaryButton
-                        label="Confirmar asistencia"
-                        onClick={confirmAssistance}
-                      />
-                      <SecondaryButton
-                        margin={false}
-                        label="Modificar carnet"
-                        onClick={confirmAssistance}
+                      <Divider />
+                      <StudentListItem
+                        email={device.student.email}
+                        id={device.student.id!}
+                        name={device.student.name}
                       />
                     </div>
-                  ) : (
-                    <AssistanceForm id={deviceId} refetch={refetch} />
+                  )}
+                  <div>
+                    {device && device.student ? (
+                      <div>
+                        <PrimaryButton
+                          label="Confirmar asistencia"
+                          onClick={confirmAssistance}
+                        />
+                      </div>
+                    ) : (
+                      <AssistanceForm deviceId={deviceId} refetch={refetch} />
+                    )}
+                  </div>
+                </>
+              ) : (
+                <div>
+                  {message && (
+                    <div className="flex justify-center items-center -mb-1">
+                      <Typography variant="h6" component="div">
+                        {message}
+                      </Typography>
+                    </div>
                   )}
                 </div>
-              ) : (
-                <div></div>
               )}
             </CardContent>
           </Fade>

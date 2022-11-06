@@ -27,9 +27,18 @@ const useDevices = () => {
     return response
   }
 
+  const getStudentDevice = async (studentId: string) => {
+    setLoading(true)
+    const response: any = await fetchCustomAPI(`student-device/${studentId}`)
+    setDevice(response.data!)
+    setLoading(false)
+    return response
+  }
+
   return {
     associateDevice,
     getDevice,
+    getStudentDevice,
     device,
     loading
   }

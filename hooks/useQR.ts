@@ -1,10 +1,16 @@
-import dayjs from 'dayjs'
 import { useState } from 'react'
-import { ApiResponsePost, fetchPostAPI } from 'services/Connection'
+import {
+  ApiResponsePost,
+  fetchPostAPI,
+  fetchSingleAPI
+} from 'services/Connection'
+import DeviceOnQr from './types/DeviceOnQr'
 import Qr from './types/Qr'
 
 const useQR = () => {
   const [loading, setLoading] = useState(false)
+  const [deviceOnQr, setDeviceOnQr] = useState<DeviceOnQr>({} as DeviceOnQr)
+
   const createQR = async (
     id: string,
     limitDate: string,
@@ -34,9 +40,21 @@ const useQR = () => {
     }
   }
 
+  const getQrWithToken = async (token: string) => {
+    setLoading(true)
+    const response = await fetchSingleAPI<DeviceOnQr>('device-qr', token)
+    if (response.status === 'success') {
+      setDeviceOnQr(response.data!)
+    }
+    setLoading(false)
+    return response
+  }
+
   return {
     createQR,
-    loading
+    loading,
+    getQrWithToken,
+    deviceOnQr
   }
 }
 

@@ -18,7 +18,6 @@ type XslxStudent = {
 const useStudents = () => {
   const [loading, setLoading] = useState(false)
   const [student, setStudent] = useState<Student>({} as Student)
-  const [students, setStudents] = useState<Student[]>([])
 
   const createStudents = async (
     students: XslxStudent[],
@@ -63,7 +62,6 @@ const useStudents = () => {
     loading,
     createStudents,
     student,
-    students,
     getStudent
   }
 }

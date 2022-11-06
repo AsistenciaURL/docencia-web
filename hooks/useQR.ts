@@ -1,38 +1,41 @@
-import { postOptions, _url } from 'services/Connection'
+import dayjs from 'dayjs'
+import { useState } from 'react'
+import { ApiResponsePost, fetchPostAPI } from 'services/Connection'
+import Qr from './types/Qr'
 
 const useQR = () => {
-  const createQR = async (id: string) => {
-    try {
-      const response = await fetch(
-        `${_url}/Qr/`,
-        postOptions({
-          FechaLimite: '2023-12-12',
-          Curso_idCurso: id
-        })
-      )
-      const data = await response.json()
-      console.log(data)
+  const [loading, setLoading] = useState(false)
+  const createQR = async (
+    id: number,
+    limitDate: string,
+    latitude: number,
+    longitude: number
+  ): Promise<ApiResponsePost<Qr>> => {
+    setLoading(true)
+    const response = await fetchPostAPI<Qr>('qrs', {
+      initDate: dayjs(new Date().toISOString()).format('YYYY-MM-DD HH:mm:ss'),
+      limitDate,
+      courseId: id,
+      latitude,
+      longitude
+    })
 
-      if (response.ok) {
-        return {
-          message: data.idQr,
-          status: 'success'
-        }
-      }
+    setLoading(false)
+
+    if (response.status === 'success') {
       return {
-        message: 'Hubo un error al crear el QR',
-        status: 'error'
+        status: 'success',
+        data: response.data
       }
-    } catch (error: any) {
-      return {
-        message: error.message,
-        status: 'error'
-      }
+    }
+    return {
+      status: 'error'
     }
   }
 
   return {
-    createQR
+    createQR,
+    loading
   }
 }
 

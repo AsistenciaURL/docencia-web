@@ -1,8 +1,8 @@
 import { Button } from '@mui/material'
 import UploadXsls from 'components/xlsx/UploadXsls'
+import useCourses from 'hooks/useCourses'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
-import { _url } from 'services/Connection'
+import { useEffect } from 'react'
 
 export async function getServerSideProps({ query }: { query: { id: string } }) {
   const { id } = query
@@ -11,43 +11,31 @@ export async function getServerSideProps({ query }: { query: { id: string } }) {
   }
 }
 
-const Course = ({ id }: { id: string }) => {
-  const [relations, setRelations] = useState([])
-  const [students, setStudents] = useState([])
+const Course = ({ id }: { id: number }) => {
+  const { getCourse, course } = useCourses()
   const router = useRouter()
 
   useEffect(() => {
-    fetch(`${_url}/Curso_has_estudiante/`)
-      .then((response) => response.json())
-      .then((data) => setRelations(data))
-    fetch(`${_url}/Estudiantes/`)
-      .then((response) => response.json())
-      .then((data) => setStudents(data))
+    getCourse(id)
   }, [])
 
-  useEffect(() => {
-    console.log(students)
-    console.log(relations)
-  }, [students, relations])
+  const reload = () => {
+    getCourse(id)
+  }
 
   return (
     <div>
       <div>{id}</div>
+      <div>{course.name}</div>
       <div className="bg-yellow-200">
         <div>Importar Estudiantes</div>
-        <UploadXsls id={id} />
+        <UploadXsls id={id} reload={reload} />
       </div>
       <div className="bg-red-200">
         <div>Estudiantes asignados</div>
         <div>
-          {relations.map((relation, index) => (
-            <div key={index}>
-              {
-                students.find(
-                  (student) => student.Carnet === relation.Estudiante_carnet
-                )?.Nombre
-              }
-            </div>
+          {course?.students?.map(({ student }, index) => (
+            <div key={index}>{student?.name}</div>
           ))}
         </div>
       </div>

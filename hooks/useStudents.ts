@@ -1,7 +1,13 @@
-import { postOptions, _url } from 'services/Connection'
-import { HookResponse } from './types'
+import { useState } from 'react'
+import {
+  ApiResponse,
+  fetchCustomAPI,
+  fetchPostAPI,
+  fetchSingleAPI
+} from 'services/Connection'
+import Student from './types/Student'
 
-type Student = {
+type XslxStudent = {
   'No. Carnet': number
   'Nombre completo': string
   Carrera: string
@@ -10,39 +16,44 @@ type Student = {
 }
 
 const useStudents = () => {
+  const [loading, setLoading] = useState(false)
+  const [student, setStudent] = useState<Student>({} as Student)
+  const [students, setStudents] = useState<Student[]>([])
+
   const createStudents = async (
-    students: Student[],
-    id: string
-  ): Promise<HookResponse> => {
+    students: XslxStudent[],
+    courseId: number
+  ): Promise<ApiResponse> => {
+    setLoading(true)
     for (const student of students) {
-      try {
-        await fetch(
-          `${_url}/Estudiantes/`,
-          postOptions({
-            Carnet: student['No. Carnet'],
-            Nombre: student['Nombre completo'],
-            Correo: student['Cuenta oficial URL'],
-            Facultad_idFacultad: 1
-          })
-        )
-        await fetch(
-          `${_url}/Curso_has_estudiante/`,
-          postOptions({
-            Curso_idCurso: id,
-            Estudiante_carnet: student['No. Carnet']
-          })
-        )
-      } catch (e) {
-        console.log(e)
+      const studentExists = await fetchSingleAPI<Student>(
+        'students',
+        student['No. Carnet']
+      )
+      if (studentExists.status !== 'success') {
+        await fetchPostAPI<Student>('students', {
+          email: student['Cuenta oficial URL'],
+          name: student['Nombre completo'],
+          faculty: student.Carrera,
+          id: student['No. Carnet'].toString()
+        })
       }
+      await fetchCustomAPI(`assign/${student['No. Carnet']}`, 'POST', {
+        courseId: Number(courseId)
+      })
     }
+    setLoading(false)
     return {
-      status: 'success'
+      status: 'success',
+      message: 'Estudiantes agregados correctamente'
     }
   }
 
   return {
-    createStudents
+    loading,
+    createStudents,
+    student,
+    students
   }
 }
 

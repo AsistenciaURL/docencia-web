@@ -11,10 +11,12 @@ import {
 } from 'firebase/auth'
 
 import { auth } from 'services/Firebase'
-import { postOptions, _url } from 'services/Connection'
-import { HookResponse } from './types'
+import { ApiResponse } from 'services/Connection'
+import useProfessors from './useProfessors'
 
 const useAuth = () => {
+  const { createProfessor } = useProfessors()
+
   const [loading, setLoading] = useState(false)
   const [currentUser, setCurrentUser] = useState<User | null | undefined>(
     undefined
@@ -30,7 +32,7 @@ const useAuth = () => {
     email: string,
     password: string,
     remember: boolean
-  ): Promise<HookResponse> => {
+  ): Promise<ApiResponse> => {
     setLoading(true)
     await setPersistence(
       auth,
@@ -46,7 +48,8 @@ const useAuth = () => {
       console.log(user)
       setLoading(false)
       return {
-        status: 'success'
+        status: 'success',
+        message: 'Bienvenido'
       }
     } catch (error: any) {
       setLoading(false)
@@ -62,26 +65,20 @@ const useAuth = () => {
     password: string,
     name: string,
     carnet: string
-  ): Promise<HookResponse> => {
-    try {
-      const user = await createUserWithEmailAndPassword(auth, email, password)
-      await fetch(
-        `${_url}/Docente/`,
-        postOptions({
-          carnet,
-          nombre: name,
-          correo: email,
-          firebaseid: user.user.uid
-        })
-      )
-
+  ) => {
+    const { user } = await createUserWithEmailAndPassword(auth, email, password)
+    if (user.uid) {
+      const response = await createProfessor({
+        carnet,
+        email,
+        name,
+        id: user.uid
+      })
+      return response
+    } else {
       return {
-        status: 'success'
-      }
-    } catch (error: any) {
-      return {
-        message: error.message,
-        status: 'error'
+        status: 'error',
+        message: 'Hubo un error al crear el catedrático'
       }
     }
   }

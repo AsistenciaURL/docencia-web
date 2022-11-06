@@ -29,9 +29,9 @@ const Input = ({
           fullWidth
           type={type}
           label={label}
-          error={error !== undefined}
           {...field}
           sx={{ pb: error ? 1.1 : 4 }}
+          error={error !== undefined}
           helperText={error && error.message}
         />
       )}

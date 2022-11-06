@@ -1,4 +1,4 @@
-export const _url = 'http://localhost:8000'
+export const _url = process.env.NEXT_PUBLIC_API_URL
 
 type Methods = 'GET' | 'POST'
 

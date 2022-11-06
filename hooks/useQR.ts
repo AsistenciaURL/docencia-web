@@ -6,21 +6,22 @@ import Qr from './types/Qr'
 const useQR = () => {
   const [loading, setLoading] = useState(false)
   const createQR = async (
-    id: number,
+    id: string,
     limitDate: string,
     latitude: number,
     longitude: number
   ): Promise<ApiResponsePost<Qr>> => {
     setLoading(true)
     const response = await fetchPostAPI<Qr>('qrs', {
-      initDate: dayjs(new Date().toISOString()).format('YYYY-MM-DD HH:mm:ss'),
+      initDate: new Date().toISOString(),
       limitDate,
-      courseId: id,
+      courseId: Number(id),
       latitude,
       longitude
     })
 
     setLoading(false)
+    console.log(response)
 
     if (response.status === 'success') {
       return {

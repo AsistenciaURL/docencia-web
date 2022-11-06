@@ -1,43 +1,53 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 
-import { Button, Typography } from '@mui/material'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 
-import { HookResponse } from 'hooks/types'
 import Input from 'components/core/Input'
-import useAssistance from 'hooks/useAssistance'
+import useStudents from 'hooks/useStudents'
+import { SnackbarContext } from 'context/SnackbarProvider'
+import PrimaryButton from 'components/core/PrimaryButton'
 
 type FormValues = {
-  carnet: string
+  studentId: string
 }
 
 const schema = yup.object().shape({
-  carnet: yup.string().required()
+  studentId: yup.string().required()
 })
 
-const AssistanceForm = ({ id }: { id: string }) => {
-  const [success, setSuccess] = useState(false)
-  const { createAssistance } = useAssistance()
+const AssistanceForm = ({ id, refetch }: { id: string; refetch: any }) => {
+  const [showStudent, setShowStudent] = useState(false)
+  const [wa, setwa] = useState('')
 
+  const { openSnackbar } = useContext(SnackbarContext)
+  const { getStudent, student } = useStudents()
   const { control, handleSubmit } = useForm<FormValues>({
     resolver: yupResolver(schema)
   })
 
   const onSubmit = async (data: FormValues) => {
-    const response: HookResponse = await createAssistance(data.carnet, id)
+    const response = await getStudent(data.studentId)
+    setwa(JSON.stringify(response))
     if (response.status === 'success') {
-      setSuccess(true)
+      setShowStudent(true)
+      refetch()
+    } else {
+      openSnackbar({
+        message: 'El carnet de este estudiante no existe',
+        severity: 'error'
+      })
     }
   }
 
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Input control={control} label="Carnet" name="carnet" />
-        <Button type="submit">Enviar Asistencia</Button>
-        {success && <Typography>ASISTENCIA ENVIADA CORRECTAMENTE</Typography>}
+        <Input control={control} label="Carnet" name="studentId" />
+        <PrimaryButton label="Confirmar estudiante" type="submit" />
+        {wa}
+        {showStudent && <h1>{student.name}</h1>}
       </form>
     </>
   )

@@ -10,14 +10,14 @@ import useQR from 'hooks/useQR'
 import { useGeolocated } from 'react-geolocated'
 import { SnackbarContext } from 'context/SnackbarProvider'
 
-export async function getServerSideProps({ query }: { query: { id: number } }) {
+export async function getServerSideProps({ query }: { query: { id: string } }) {
   const { id } = query
   return {
     props: { id }
   }
 }
 
-const GenerateQR = ({ id }: { id: number }) => {
+const GenerateQR = ({ id }: { id: string }) => {
   const [generatedQR, setGeneratedQR] = useState<string | undefined>(undefined)
   const [show, setShow] = useState(false)
   const [value, setValue] = useState<Dayjs>(dayjs(new Date().toISOString()))
@@ -43,7 +43,7 @@ const GenerateQR = ({ id }: { id: number }) => {
   }
 
   const generate = async () => {
-    const datetime = value.format('YYYY-MM-DD HH:mm:ss')
+    const datetime = value.toDate().toISOString()
 
     console.log(value >= dayjs(new Date()))
     if (coords !== undefined) {

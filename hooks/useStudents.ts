@@ -49,11 +49,22 @@ const useStudents = () => {
     }
   }
 
+  const getStudent = async (studentId: string) => {
+    setLoading(true)
+    const response = await fetchSingleAPI<Student>('students', studentId)
+    if (response.status === 'success' && response.data) {
+      setStudent(response.data)
+    }
+    setLoading(false)
+    return response
+  }
+
   return {
     loading,
     createStudents,
     student,
-    students
+    students,
+    getStudent
   }
 }
 

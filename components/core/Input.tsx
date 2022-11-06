@@ -30,7 +30,7 @@ const Input = ({
           type={type}
           label={label}
           {...field}
-          sx={{ pb: error ? 1.1 : 4 }}
+          sx={{ pb: error ? 1.1 : 3 }}
           error={error !== undefined}
           helperText={error && error.message}
         />

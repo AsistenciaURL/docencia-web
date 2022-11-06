@@ -1,44 +1,109 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 
-import { Button, Typography } from '@mui/material'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
+import Typography from '@mui/material/Typography'
 
-import { HookResponse } from 'hooks/types'
 import Input from 'components/core/Input'
-import useAssistance from 'hooks/useAssistance'
+import useStudents from 'hooks/useStudents'
+import { SnackbarContext } from 'context/SnackbarProvider'
+import PrimaryButton from 'components/core/PrimaryButton'
+import StudentListItem from 'components/core/StudentListItem'
+import useDevices from 'hooks/useDevices'
 
 type FormValues = {
-  carnet: string
+  studentId: string
 }
 
 const schema = yup.object().shape({
-  carnet: yup.string().required()
+  studentId: yup.string().required()
 })
 
-const AssistanceForm = ({ id }: { id: string }) => {
-  const [success, setSuccess] = useState(false)
-  const { createAssistance } = useAssistance()
+const AssistanceForm = ({
+  deviceId,
+  refetch
+}: {
+  deviceId: string
+  refetch: any
+}) => {
+  const [showStudent, setShowStudent] = useState(false)
 
+  const { openSnackbar } = useContext(SnackbarContext)
+  const { getStudent, student, loading } = useStudents()
+  const { getStudentDevice, associateDevice } = useDevices()
   const { control, handleSubmit } = useForm<FormValues>({
     resolver: yupResolver(schema)
   })
 
   const onSubmit = async (data: FormValues) => {
-    const response: HookResponse = await createAssistance(data.carnet, id)
-    if (response.status === 'success') {
-      setSuccess(true)
+    const responseDevice = await getStudentDevice(data.studentId)
+    console.log(responseDevice)
+    if (responseDevice.status !== 'success') {
+      const responseStudent = await getStudent(data.studentId)
+      if (responseStudent.status === 'success') {
+        setShowStudent(true)
+      } else {
+        openSnackbar({
+          message: 'El carnet de este estudiante no existe',
+          severity: 'error'
+        })
+      }
+    } else {
+      openSnackbar({
+        message: 'Este carnet ya esta registrado a otro dispositivo',
+        severity: 'error'
+      })
+    }
+  }
+
+  const confirmStudent = async () => {
+    console.log(student.id)
+    if (student.id) {
+      const response: any = await associateDevice(deviceId, student.id)
+      console.log(response)
+      if (response.status === 'success') {
+        openSnackbar({
+          message: 'Estudiante registrado correctamente',
+          severity: 'success'
+        })
+        refetch()
+      } else {
+        openSnackbar({
+          message: 'Hubo un error desconocido',
+          severity: 'error'
+        })
+      }
     }
   }
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Input control={control} label="Carnet" name="carnet" />
-        <Button type="submit">Enviar Asistencia</Button>
-        {success && <Typography>ASISTENCIA ENVIADA CORRECTAMENTE</Typography>}
-      </form>
+      {!student.id ? (
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Input control={control} label="Carnet" name="studentId" />
+          <PrimaryButton label="Confirmar carnet" type="submit" />
+          {showStudent && <h1>{student.name}</h1>}
+        </form>
+      ) : (
+        <>
+          <StudentListItem
+            email={student.email}
+            name={student.name}
+            id={student.id}
+          />
+          <PrimaryButton
+            label="Confirmar estudiante"
+            onClick={confirmStudent}
+          />
+          <div className="flex justify-center">
+            <Typography variant="caption">
+              Esta acción no se podrá deshacer, deberá hablar con un
+              administrador.
+            </Typography>
+          </div>
+        </>
+      )}
     </>
   )
 }

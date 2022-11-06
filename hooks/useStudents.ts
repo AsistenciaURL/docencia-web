@@ -18,7 +18,6 @@ type XslxStudent = {
 const useStudents = () => {
   const [loading, setLoading] = useState(false)
   const [student, setStudent] = useState<Student>({} as Student)
-  const [students, setStudents] = useState<Student[]>([])
 
   const createStudents = async (
     students: XslxStudent[],
@@ -49,11 +48,21 @@ const useStudents = () => {
     }
   }
 
+  const getStudent = async (studentId: string) => {
+    setLoading(true)
+    const response = await fetchSingleAPI<Student>('students', studentId)
+    if (response.status === 'success' && response.data) {
+      setStudent(response.data)
+    }
+    setLoading(false)
+    return response
+  }
+
   return {
     loading,
     createStudents,
     student,
-    students
+    getStudent
   }
 }
 

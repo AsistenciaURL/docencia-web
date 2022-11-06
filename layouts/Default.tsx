@@ -7,6 +7,8 @@ import { useRouter } from 'next/router'
 import { auth } from 'services/Firebase'
 import { SessionContext } from 'context/AuthProvider'
 
+import Navbar from 'components/navbar/Navbar'
+
 type Props = {
   children: ReactNode
 }
@@ -34,7 +36,7 @@ const Default = ({ children }: Props) => {
     <div>
       {!loading && (
         <div>
-          <Button onClick={() => logOut()}>Salir</Button>
+          <Navbar />
           <div>{children}</div>
         </div>
       )}

@@ -49,16 +49,20 @@ const AssistenceSession = ({
   const getPermission = async () => {
     const response = await getQrWithToken(token)
 
-    if (response.status === 'success') {
-      const responseDevice = await getDevice(deviceId)
-      if (responseDevice.status === 'error') {
-        setMessage('Este dispositivo no esta registrado')
-      } else {
-        setPermission(true)
+    if (!response.data?.used) {
+      if (response.status === 'success') {
+        const responseDevice = await getDevice(deviceId)
+        if (responseDevice.status === 'error') {
+          setMessage('Este dispositivo no esta registrado')
+        } else {
+          setPermission(true)
+        }
       }
-    }
-    if (response.status === 'error' || response.data?.deviceId !== deviceId) {
-      setMessage('No tiene permitido el acceso a la asistencia')
+      if (response.status === 'error' || response.data?.deviceId !== deviceId) {
+        setMessage('No tiene permitido el acceso a la asistencia')
+      }
+    } else {
+      setMessage('Ya fue tomada su asistencia')
     }
   }
 

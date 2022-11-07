@@ -32,7 +32,19 @@ const UploadXsls = ({ id, reload }: Props) => {
         const sheetName = workbook.SheetNames[0]
         const worksheet = workbook.Sheets[sheetName]
         const json: Student[] = utils.sheet_to_json(worksheet)
-        setStudents(json)
+        const formatedStudents: Student[] = json.map((student) => {
+          return {
+            ...student,
+            'Nombre completo': student['Nombre completo']
+              .replaceAll('&Aacute;', 'Á')
+              .replaceAll('&Eacute;', 'É')
+              .replaceAll('&Iacute;', 'Í')
+              .replaceAll('&Oacute;', 'Ó')
+              .replaceAll('&Uacute;', 'Ú')
+          }
+        })
+
+        setStudents(formatedStudents)
       }
       reader.readAsArrayBuffer(e.target.files[0])
     }

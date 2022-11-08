@@ -19,6 +19,10 @@ const Course = ({ id }: { id: number }) => {
     getCourse(id)
   }, [])
 
+  useEffect(() => {
+    console.log(course)
+  }, [course])
+
   const reload = () => {
     getCourse(id)
   }
@@ -36,6 +40,22 @@ const Course = ({ id }: { id: number }) => {
         <div>
           {course?.students?.map(({ student }, index) => (
             <div key={index}>{student?.name}</div>
+          ))}
+        </div>
+      </div>
+      <div className="bg-green-200">
+        <h1>QRs generados</h1>
+        <div>
+          {course?.qrs?.map((qr) => (
+            <div key={qr.id} className="flex">
+              <div>{qr.initDate}</div>
+              <div
+                className="cursor-pointer"
+                onClick={() => router.push(`/courses/${id}/${qr.id}`)}
+              >
+                Ver asistencias
+              </div>
+            </div>
           ))}
         </div>
       </div>

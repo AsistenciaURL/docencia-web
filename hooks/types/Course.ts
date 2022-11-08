@@ -1,4 +1,5 @@
 import CourseStudent from './CourseStudent'
+import Qr from './Qr'
 
 type Course = {
   id?: number
@@ -10,6 +11,7 @@ type Course = {
   professorId: string
 
   students?: CourseStudent[]
+  qrs?: Qr[]
 }
 
 export default Course

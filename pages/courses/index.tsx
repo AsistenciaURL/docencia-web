@@ -3,7 +3,6 @@ import { useContext, useEffect } from 'react'
 import { Button } from '@mui/material'
 import { useRouter } from 'next/router'
 import { SessionContext } from 'context/AuthProvider'
-import useCourses from 'hooks/useCourses'
 import useProfessors from 'hooks/useProfessors'
 
 const CoursesList = () => {
@@ -14,10 +13,6 @@ const CoursesList = () => {
   useEffect(() => {
     getProfessor(session.uid!)
   }, [])
-
-  useEffect(() => {
-    console.log(professor)
-  }, [professor])
 
   return (
     <div>

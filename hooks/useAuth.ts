@@ -66,19 +66,30 @@ const useAuth = () => {
     name: string,
     carnet: string
   ) => {
-    const { user } = await createUserWithEmailAndPassword(auth, email, password)
-    if (user.uid) {
-      const response = await createProfessor({
-        carnet,
+    try {
+      const { user } = await createUserWithEmailAndPassword(
+        auth,
         email,
-        name,
-        id: user.uid
-      })
-      return response
-    } else {
+        password
+      )
+      if (user.uid) {
+        const response = await createProfessor({
+          carnet,
+          email,
+          name,
+          id: user.uid
+        })
+        return response
+      } else {
+        return {
+          status: 'error',
+          message: 'Hubo un error al crear el catedrático'
+        }
+      }
+    } catch (error) {
       return {
         status: 'error',
-        message: 'Hubo un error al crear el catedrático'
+        message: 'Este correo ya se encuentra en uso actualmente'
       }
     }
   }

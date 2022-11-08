@@ -10,6 +10,7 @@ import Qr from './types/Qr'
 const useQR = () => {
   const [loading, setLoading] = useState(false)
   const [deviceOnQr, setDeviceOnQr] = useState<DeviceOnQr>({} as DeviceOnQr)
+  const [qr, setQr] = useState<Qr>({} as Qr)
 
   const createQR = async (
     id: string,
@@ -50,11 +51,23 @@ const useQR = () => {
     return response
   }
 
+  const getQr = async (qrId: string) => {
+    setLoading(true)
+    const response = await fetchSingleAPI<Qr>('qrs', qrId)
+    if (response.status === 'success') {
+      setQr(response.data!)
+    }
+    setLoading(false)
+    return response
+  }
+
   return {
     createQR,
     loading,
     getQrWithToken,
-    deviceOnQr
+    deviceOnQr,
+    getQr,
+    qr
   }
 }
 

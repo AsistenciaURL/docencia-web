@@ -1,3 +1,6 @@
+import AssistanceCategory from './AssistanceCategory'
+import Student from './Student'
+
 type Assistance = {
   id?: number
   date: string
@@ -5,6 +8,10 @@ type Assistance = {
   courseId: number
   assistanceCategoryId: number
   studentId: string
+  qrId: number
+
+  student?: Student
+  assistanceCategory?: AssistanceCategory
 }
 
 export default Assistance

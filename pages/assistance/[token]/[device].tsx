@@ -77,7 +77,8 @@ const AssistenceSession = ({
         courseId: deviceOnQr.qr?.courseId!,
         date: new Date().toISOString(),
         observations: '',
-        studentId: device.studentId!
+        studentId: device.studentId!,
+        qrId: deviceOnQr.qrId
       },
       token
     )

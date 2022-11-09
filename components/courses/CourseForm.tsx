@@ -5,15 +5,11 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 
 import { SnackbarContext } from 'context/SnackbarProvider'
-import { useContext, useEffect, useState } from 'react'
+import { useContext } from 'react'
 import Input from 'components/core/Input'
 import useCourses from 'hooks/useCourses'
 import { SessionContext } from 'context/AuthProvider'
 import Select from 'components/core/Select'
-import { ApiResponse, fetchAPI } from 'services/Connection'
-import Semester from 'hooks/types/Semester'
-import Faculty from 'hooks/types/Faculty'
-import Course from 'hooks/types/Course'
 import semesters from './Semesters'
 import faculties from './Faculties'
 import TextField from '@mui/material/TextField'
@@ -50,22 +46,23 @@ const CourseForm = () => {
 
   const onSubmit = async (data: FormValues) => {
     if (session.uid) {
-      const response: ApiResponse<Course> = await createCourse({
+      const response = await createCourse({
         faculty: data.faculty,
-        professor: session.uid,
+        professorId: session.uid,
         semester: data.semester,
         name: data.name,
         section: data.section
       })
       if (response.status === 'success') {
         openSnackbar({
-          message: response.message,
+          message: 'Curso creado correctamente',
           severity: 'success'
         })
         router.push('/courses')
       } else {
+        console.log(response)
         openSnackbar({
-          message: response.message,
+          message: 'Error al crear el curso',
           severity: 'error'
         })
       }

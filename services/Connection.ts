@@ -13,6 +13,7 @@ type Tables =
   | 'courseStudents'
   | 'assistanceCategories'
   | 'device-qr'
+  | 'assistances-with-qr'
 
 export type ApiResponse<T = void> = {
   data?: T[]

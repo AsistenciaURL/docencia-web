@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { fetchSingleAPI } from 'services/Connection'
+import { fetchPostAPI, fetchSingleAPI } from 'services/Connection'
 import Course from './types/Course'
 
 const useCourses = () => {
@@ -14,11 +14,19 @@ const useCourses = () => {
     setLoading(false)
   }
 
+  const createCourse = async (course: Course) => {
+    setLoading(true)
+    const response = await fetchPostAPI<Course>('courses', course)
+    setLoading(false)
+    return response
+  }
+
   return {
     loading,
     getCourse,
     course,
-    courses
+    courses,
+    createCourse
   }
 }
 

@@ -33,6 +33,10 @@ const Course = ({ id }: { id: number }) => {
     getCourse(id)
   }, [])
 
+  useEffect(() => {
+    console.log(course)
+  }, [course])
+
   const reload = () => {
     getCourse(id)
   }
@@ -70,6 +74,25 @@ const Course = ({ id }: { id: number }) => {
           <p className="font-light text-gray-900">Generar QR</p>
         </div>
       </div>
+      <div className="bg-green-200">
+        <h1>QRs generados</h1>
+        <div>
+          {course?.qrs?.map((qr) => (
+            <div key={qr.id} className="flex">
+              <div>{qr.initDate}</div>
+              <div
+                className="cursor-pointer"
+                onClick={() => router.push(`/courses/${id}/${qr.id}`)}
+              >
+                Ver asistencias
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <Button onClick={() => router.push(`/courses/${id}/generate-qr`)}>
+        Generar QR
+      </Button>
       <div className="overflow-y-scroll h-[80%] w-[75%] rounded-2xl">
         <TableContainer component={Paper}>
           <Table size="small">

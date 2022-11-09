@@ -3,7 +3,7 @@ import Qr from './Qr'
 
 type DeviceOnQr = {
   deviceId: string
-  qrId: string
+  qrId: number
   token: string
   used: string
 

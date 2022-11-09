@@ -50,16 +50,18 @@ const SignUpForm = () => {
 
   const onSubmit = async (data: FormValues) => {
     if (data.password === data.passwordConfirm) {
-      const response: ApiResponse<Professor> = await createUser(
+      const response = await createUser(
         data.email,
         data.password,
         data.name,
         data.carnet
       )
-      openSnackbar({
-        message: response.message,
-        severity: response.status
-      })
+      if (response.status === 'success') {
+        openSnackbar({
+          message: 'Cuenta creada correctamente',
+          severity: 'success'
+        })
+      }
       router.push('/sign-in')
     } else {
       openSnackbar({

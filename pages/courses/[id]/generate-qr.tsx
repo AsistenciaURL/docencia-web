@@ -7,8 +7,8 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import dayjs, { Dayjs } from 'dayjs'
 import QRCode from 'react-qr-code'
 import useQR from 'hooks/useQR'
-import { useGeolocated } from 'react-geolocated'
 import { SnackbarContext } from 'context/SnackbarProvider'
+import LocationPicker from 'components/geo/LocationPicker'
 
 export async function getServerSideProps({ query }: { query: { id: string } }) {
   const { id } = query
@@ -22,13 +22,7 @@ const GenerateQR = ({ id }: { id: string }) => {
   const [show, setShow] = useState(false)
   const [value, setValue] = useState<Dayjs>(dayjs(new Date().toISOString()))
   const { openSnackbar } = useContext(SnackbarContext)
-
-  const { coords } = useGeolocated({
-    positionOptions: {
-      enableHighAccuracy: false
-    },
-    userDecisionTimeout: 5000
-  })
+  const [location, setLocation] = useState<any>({})
 
   const { createQR } = useQR()
 
@@ -44,16 +38,15 @@ const GenerateQR = ({ id }: { id: string }) => {
 
   const generate = async () => {
     const datetime = value.toDate().toISOString()
-
     console.log(value >= dayjs(new Date()))
-    if (coords !== undefined) {
+    if (location.lat !== undefined && location.lng !== undefined) {
       if (value >= dayjs(new Date())) {
         setShow(true)
         const response = await createQR(
           id,
           datetime,
-          coords.latitude,
-          coords.longitude
+          location.lat,
+          location.lng
         )
         if (response.status === 'success' && response.data) {
           setGeneratedQR(`http://localhost:3000/assistance/${response.data.id}`)
@@ -73,12 +66,6 @@ const GenerateQR = ({ id }: { id: string }) => {
           severity: 'error'
         })
       }
-    } else {
-      openSnackbar({
-        message:
-          'La localización esta actualmente desactivada, actívela y recargue la página',
-        severity: 'error'
-      })
     }
   }
 
@@ -91,6 +78,7 @@ const GenerateQR = ({ id }: { id: string }) => {
           onChange={handleChange}
           renderInput={(params) => <TextField {...params} />}
         />
+        <LocationPicker setDefaultLocation={setLocation} />
       </LocalizationProvider>
       <div className="w-screen flex justify-center">
         <Button onClick={() => generate()}>Generar QR</Button>

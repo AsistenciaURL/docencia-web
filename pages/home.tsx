@@ -7,7 +7,16 @@ const Home: NextPage = () => {
 
   return (
     <div>
-      <Button onClick={() => router.push('/courses')}>Ver cursos</Button>
+      <div className="grid grid-cols-1 gap-20 sm:grid-cols-2 ">
+          <div className="py-52 px-6">
+            <p className="text-5xl text-left text-[#082E71] font-bold  sm:text-7xl">Assist:</p>
+            <p className="text-5xl text-left text-[#000000] font-bold  sm:text-7xl">administra tus</p>
+            <p className="text-5xl text-left text-[#082E71] font-bold  sm:text-7xl">Asistencias</p>
+          </div>
+          <div className="py-52 px-6">
+            <img  className="max-w-full h-auto" src="" alt="Profesor" />
+          </div>
+      </div>
     </div>
   )
 }

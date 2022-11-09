@@ -16,6 +16,7 @@ import Faculty from 'hooks/types/Faculty'
 import Course from 'hooks/types/Course'
 import semesters from './Semesters'
 import faculties from './Faculties'
+import TextField from '@mui/material/TextField'
 
 type FormValues = {
   name: string
@@ -72,46 +73,60 @@ const CourseForm = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <Input
-        control={control}
-        label="Nombre del curso"
-        name="name"
-        error={errors.name}
-      />
-      <Input
-        control={control}
-        type="number"
-        label="Sección"
-        name="section"
-        error={errors.section}
-      />
-      <Select
-        control={control}
-        name="semester"
-        label="Ciclo"
-        error={errors.semester}
+    <div className="grid place-items-center ">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="block rounded-lg shadow-lg self-start mt-6 bg-white max-w-sm min-w-[50%] p-3 pt-4 text-center "
       >
-        {semesters.map((semester, index) => (
-          <MenuItem key={index} value={semester.name}>
-            {semester.name}
-          </MenuItem>
-        ))}
-      </Select>
-      <Select
-        control={control}
-        name="faculty"
-        label="Facultad"
-        error={errors.faculty}
-      >
-        {faculties.map((faculty, index) => (
-          <MenuItem key={index} value={faculty.name}>
-            {faculty.name}
-          </MenuItem>
-        ))}
-      </Select>
-      <Button type="submit">{loading ? 'Cargando...' : 'Crear curso'}</Button>
-    </form>
+        <p className="text-xl font-semibold text-[#082E71] pb-3">
+          Crear nuevo curso
+        </p>
+        <Input
+          control={control}
+          label="Nombre del curso"
+          name="name"
+          error={errors.name}
+        />
+        <Input
+          control={control}
+          type="number"
+          label="Sección"
+          name="section"
+          error={errors.section}
+        />
+        <Select
+          control={control}
+          name="semester"
+          label="Ciclo"
+          error={errors.semester}
+        >
+          {semesters.map((semester, index) => (
+            <MenuItem key={index} value={semester.name}>
+              {semester.name}
+            </MenuItem>
+          ))}
+        </Select>
+
+        <Select
+          control={control}
+          name="faculty"
+          label="Facultad"
+          error={errors.faculty}
+        >
+          {faculties.map((faculty, index) => (
+            <MenuItem key={index} value={faculty.name}>
+              {faculty.name}
+            </MenuItem>
+          ))}
+        </Select>
+        <button
+          className="text-white bg-[#082E71] hover:bg-white hover:text-[#082E71] font-medium rounded-lg text-base px-5 py-2.5 text-center m-2"
+          type="submit"
+        >
+          {loading ? 'Cargando...' : 'Crear curso'}
+        </button>
+      </form>
+    </div>
   )
 }
 

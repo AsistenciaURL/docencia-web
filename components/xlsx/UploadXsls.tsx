@@ -44,19 +44,21 @@ const UploadXsls = ({ id, reload }: Props) => {
   }
 
   return (
-    <>
+    <div className="">
       <form>
-        <label htmlFor="upload">Upload File</label>
         <input
           type="file"
           name="upload"
           id="upload"
           onChange={readUploadFile}
+          className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4
+           file:rounded-sm file:border-0 file:text-sm file:font-semibold 
+           file:bg-[#8396B8] file:text-white hover:file:bg-violet-100 mt-2"
         />
       </form>
       <div>
         {students.map((student, index) => (
-          <div key={student['No. Carnet']} className="flex">
+          <div key={student['No. Carnet']} className="flex justify-between">
             <div>{student['Nombre completo']}</div>
             <Button
               className="border-black border-2"
@@ -70,9 +72,14 @@ const UploadXsls = ({ id, reload }: Props) => {
             </Button>
           </div>
         ))}
-        <Button onClick={() => confirmStudents()}>Confirmar estudiantes</Button>
+        <button
+          className="text-white bg-[#082E71] hover:bg-white hover:text-[#082E71] font-small rounded-lg text-base px-5 py-2.5 text-center m-2"
+          onClick={() => confirmStudents()}
+        >
+          Confirmar estudiantes
+        </button>
       </div>
-    </>
+    </div>
   )
 }
 

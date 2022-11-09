@@ -35,7 +35,7 @@ const Default = ({ children }: Props) => {
   return (
     <div>
       {!loading && (
-        <div>
+        <div className="bg-[#F3F4F6] h-screen overflow-y-auto overflow-x-hidden">
           <Navbar />
           <div>{children}</div>
         </div>

@@ -1,5 +1,4 @@
 import useAssistance from 'hooks/useAssistance'
-import useQR from 'hooks/useQR'
 import { useEffect } from 'react'
 
 export async function getServerSideProps({

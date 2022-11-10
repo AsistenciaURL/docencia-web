@@ -1,4 +1,4 @@
-import { Button, MenuItem } from '@mui/material'
+import { MenuItem } from '@mui/material'
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -12,7 +12,6 @@ import { SessionContext } from 'context/AuthProvider'
 import Select from 'components/core/Select'
 import semesters from './Semesters'
 import faculties from './Faculties'
-import TextField from '@mui/material/TextField'
 
 type FormValues = {
   name: string

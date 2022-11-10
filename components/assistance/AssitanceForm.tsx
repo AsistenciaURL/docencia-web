@@ -30,7 +30,7 @@ const AssistanceForm = ({
   const [showStudent, setShowStudent] = useState(false)
 
   const { openSnackbar } = useContext(SnackbarContext)
-  const { getStudent, student, loading } = useStudents()
+  const { getStudent, student } = useStudents()
   const { getStudentDevice, associateDevice } = useDevices()
   const { control, handleSubmit } = useForm<FormValues>({
     resolver: yupResolver(schema)

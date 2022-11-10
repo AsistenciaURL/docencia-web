@@ -1,8 +1,6 @@
-import { ReactNode, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { signOut } from 'firebase/auth'
 import { auth } from 'services/Firebase'
-import type { NextPage } from 'next'
 
 const Navbar = () => {
   const router = useRouter()

@@ -1,4 +1,4 @@
-import Course from "./Course"
+import Course from './Course'
 
 type Professor = {
   id?: string

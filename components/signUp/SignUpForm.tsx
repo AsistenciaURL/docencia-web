@@ -4,13 +4,10 @@ import { useRouter } from 'next/router'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 
-import { HookResponse } from 'hooks/types'
 import Input from 'components/core/Input'
 import useAuth from 'hooks/useAuth'
 import { useContext } from 'react'
 import { SnackbarContext } from 'context/SnackbarProvider'
-import { ApiResponse } from 'services/Connection'
-import Professor from 'hooks/types/Professor'
 
 type FormValues = {
   email: string

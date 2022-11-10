@@ -1,6 +1,5 @@
 import { useContext, useEffect } from 'react'
 
-import { Button } from '@mui/material'
 import { useRouter } from 'next/router'
 import { SessionContext } from 'context/AuthProvider'
 import useProfessors from 'hooks/useProfessors'

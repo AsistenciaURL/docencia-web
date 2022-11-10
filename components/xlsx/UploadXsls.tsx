@@ -1,9 +1,8 @@
-import { Button, Divider } from '@mui/material'
+import { Divider } from '@mui/material'
 import PrimaryButton from 'components/core/PrimaryButton'
 import SecondaryButton from 'components/core/SecondaryButton'
 import StudentListItem from 'components/core/StudentListItem'
 import useStudents from 'hooks/useStudents'
-import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { read, utils } from 'xlsx'
 

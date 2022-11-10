@@ -1,22 +1,20 @@
-import { Button } from '@mui/material'
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Tab,
+  Tabs,
+  Typography
+} from '@mui/material'
 import UploadXsls from 'components/xlsx/UploadXsls'
 import useCourses from 'hooks/useCourses'
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
-import { styled } from '@mui/material/styles'
-import Table from '@mui/material/Table'
-import TableBody from '@mui/material/TableBody'
-import TableCell, { tableCellClasses } from '@mui/material/TableCell'
-import TableContainer from '@mui/material/TableContainer'
-import TableHead from '@mui/material/TableHead'
-import TableRow from '@mui/material/TableRow'
-import Paper from '@mui/material/Paper'
-import { indigo } from '@mui/material/colors'
-import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
-import ModeIcon from '@mui/icons-material/Mode'
-import IconButton from '@mui/material/IconButton'
+import { ReactNode, SyntheticEvent, useEffect, useState } from 'react'
+
 import QrCodeIcon from '@mui/icons-material/QrCode'
-import BarChartIcon from '@mui/icons-material/BarChart'
+import StudentTable from 'components/core/StudentTable'
+import QRTable from 'components/core/QRTable'
 
 export async function getServerSideProps({ query }: { query: { id: string } }) {
   const { id } = query
@@ -25,9 +23,44 @@ export async function getServerSideProps({ query }: { query: { id: string } }) {
   }
 }
 
+interface TabPanelProps {
+  children?: ReactNode
+  index: number
+  value: number
+}
+
+function TabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props
+
+  return (
+    <div
+      role="tabpanel"
+      className="w-full"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  )
+}
+
+function a11yProps(index: number) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`
+  }
+}
+
 const Course = ({ id }: { id: number }) => {
   const { getCourse, course } = useCourses()
   const router = useRouter()
+  const [value, setValue] = useState(0)
 
   useEffect(() => {
     getCourse(id)
@@ -41,104 +74,58 @@ const Course = ({ id }: { id: number }) => {
     getCourse(id)
   }
 
-  const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-      backgroundColor: indigo[900],
-      color: theme.palette.common.white
-    },
-    [`&.${tableCellClasses.body}`]: {
-      fontSize: 14
-    }
-  }))
+  const handleChange = (event: SyntheticEvent, newValue: number) => {
+    setValue(newValue)
+  }
 
   return (
-    <div className="grid place-items-center h-screen w-screen">
-      <div className=" w-[75%] pt-12 ">
-        <p className="text-2xl font-bold text-gray-700">
-          Administrando: {course.name}
-        </p>
-      </div>
-      <div className="md:w-[75%] sm:w-[60%] grid md:grid-cols-[80%,20%]">
-        <div className=" bg-white border border-[#8396B8] p-4 rounded-2xl md:mr-2 mb-2 md:mb-0">
-          <p className="text-[#093073]">Importar estudiantes: </p>
-          <UploadXsls id={id} reload={reload} />
-        </div>
-        <div
+    <div className="grid place-items-center w-screen">
+      <div className="md:flex w-[80%] pt-12">
+        <Card className="w-full mx-2">
+          <CardContent>
+            <Typography variant="h4">Administrando: {course.name}</Typography>
+          </CardContent>
+        </Card>
+        <Card
           onClick={() => router.push(`/courses/${id}/generate-qr`)}
           className=" bg-white rounded-xl drop-shadow-sm grid place-content-center text-center hover:cursor-pointer
-          hover:opacity-60"
+          hover:opacity-60 md:w-1/3 w-full"
         >
           <p>
             <QrCodeIcon color="action" sx={{ fontSize: 55 }} />
           </p>
           <p className="font-light text-gray-900">Generar QR</p>
-        </div>
+        </Card>
       </div>
-      <div className="bg-green-200">
-        <h1>QRs generados</h1>
-        <div>
-          {course?.qrs?.map((qr) => (
-            <div key={qr.id} className="flex">
-              <div>{qr.initDate}</div>
-              <div
-                className="cursor-pointer"
-                onClick={() => router.push(`/courses/${id}/${qr.id}`)}
-              >
-                Ver asistencias
-              </div>
+      <Card className="md:w-1/2 w-full mt-4">
+        <CardContent>
+          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              aria-label="basic tabs example"
+            >
+              <Tab label="Ver estudiantes" {...a11yProps(0)} />
+              <Tab label="Ver QRs creados" {...a11yProps(1)} />
+              <Tab label="Importar estudiantes" {...a11yProps(2)} />
+            </Tabs>
+          </Box>
+          <TabPanel value={value} index={0}>
+            {course && <StudentTable course={course} />}
+          </TabPanel>
+          <TabPanel value={value} index={1}>
+            {course && <QRTable course={course} />}
+          </TabPanel>
+          <TabPanel value={value} index={2}>
+            <div className=" bg-white border border-[#8396B8] p-4 rounded-2xl md:mr-2 mb-2 md:mb-0">
+              <p className="text-[#093073]">
+                Importar estudiantes desde archivo de Excel:{' '}
+              </p>
+              <UploadXsls id={id} reload={reload} />
             </div>
-          ))}
-        </div>
-      </div>
-      <Button onClick={() => router.push(`/courses/${id}/generate-qr`)}>
-        Generar QR
-      </Button>
-      <div className="overflow-y-scroll h-[80%] w-[75%] rounded-2xl">
-        <TableContainer component={Paper}>
-          <Table size="small">
-            <TableHead>
-              <TableRow>
-                <StyledTableCell>No.</StyledTableCell>
-                <StyledTableCell>Estudiante</StyledTableCell>
-                <StyledTableCell>Carnet</StyledTableCell>
-                <StyledTableCell align="center">Desasignar</StyledTableCell>
-                <StyledTableCell align="center">Modificar</StyledTableCell>
-                <StyledTableCell align="center">Estadísticas</StyledTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {course?.students?.map(({ student }, index) => (
-                <TableRow key={index}>
-                  <StyledTableCell component="th" scope="row">
-                    {index + 1}
-                  </StyledTableCell>
-                  <StyledTableCell component="th" scope="row">
-                    {student?.name}
-                  </StyledTableCell>
-                  <StyledTableCell component="th" scope="row">
-                    {student?.id}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    <IconButton color="secondary" size="small">
-                      <RemoveCircleOutlineIcon fontSize="small" />
-                    </IconButton>
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    <IconButton color="primary" size="small">
-                      <ModeIcon fontSize="small" />
-                    </IconButton>
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    <IconButton color="success" size="small">
-                      <BarChartIcon fontSize="small" />
-                    </IconButton>
-                  </StyledTableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </div>
+          </TabPanel>
+        </CardContent>
+      </Card>
     </div>
   )
 }

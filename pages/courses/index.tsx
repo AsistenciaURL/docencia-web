@@ -31,14 +31,13 @@ const CoursesList = () => {
           <p className="text-gray-900 font-semibold">Ciclo</p>
         </div>
         {professor?.courses?.map((course) => (
-          <div
+          <button
             key={course.id}
-            className="flex cursor-pointer h-[30px] border border-[#8396B8]"
+            onClick={() => router.push(`/courses/${course.id}`)}
+            className="w-full pl-10 font-semibold text-zinc-900 hover:bg-gray-200 transition-all active:bg-gray-300 flex cursor-pointer h-[30px] border border-[#8396B8]"
           >
-            <div onClick={() => router.push(`/courses/${course.id}`)}>
-              <p className="pl-10 font-semibold text-zinc-900">{course.name}</p>
-            </div>
-          </div>
+            {course.name}
+          </button>
         ))}
       </div>
     </div>

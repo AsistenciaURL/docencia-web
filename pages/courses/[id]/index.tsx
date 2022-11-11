@@ -7,6 +7,7 @@ import { ReactNode, SyntheticEvent, useEffect, useState } from 'react'
 import QrCodeIcon from '@mui/icons-material/QrCode'
 import StudentTable from 'components/core/StudentTable'
 import QRTable from 'components/core/QRTable'
+import AssessmentIcon from '@mui/icons-material/Assessment'
 
 export async function getServerSideProps({ query }: { query: { id: string } }) {
   const { id } = query
@@ -79,9 +80,19 @@ const Course = ({ id }: { id: number }) => {
           </CardContent>
         </Card>
         <Card
-          onClick={() => router.push(`/courses/${id}/generate-qr`)}
+          onClick={() => router.push(`/courses/${id}/stats`)}
           className=" bg-white rounded-xl drop-shadow-sm grid place-content-center text-center hover:cursor-pointer
           hover:opacity-60 md:w-1/3 w-full"
+        >
+          <p>
+            <AssessmentIcon color="action" sx={{ fontSize: 55 }} />
+          </p>
+          <p className="font-light text-gray-900">Ver estadísticas</p>
+        </Card>
+        <Card
+          onClick={() => router.push(`/courses/${id}/generate-qr`)}
+          className=" bg-white rounded-xl drop-shadow-sm grid place-content-center text-center hover:cursor-pointer
+          hover:opacity-60 md:w-1/3 w-full mx-2"
         >
           <p>
             <QrCodeIcon color="action" sx={{ fontSize: 55 }} />
@@ -89,7 +100,7 @@ const Course = ({ id }: { id: number }) => {
           <p className="font-light text-gray-900">Generar QR</p>
         </Card>
       </div>
-      <Card className="md:w-1/2 w-full mt-4">
+      <Card className="md:w-3/4 w-full mt-4">
         <CardContent>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <Tabs
@@ -103,7 +114,7 @@ const Course = ({ id }: { id: number }) => {
             </Tabs>
           </Box>
           <TabPanel value={value} index={0}>
-            {course && <StudentTable course={course} />}
+            {course && <StudentTable refetch={reload} course={course} />}
           </TabPanel>
           <TabPanel value={value} index={1}>
             {course && <QRTable course={course} />}

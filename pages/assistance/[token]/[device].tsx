@@ -36,7 +36,7 @@ const AssistenceSession = ({
   const [message, setMessage] = useState<boolean | string>(false)
   const { getDevice, device } = useDevices()
   const { getQrWithToken, deviceOnQr } = useQR()
-  const { createAssistance } = useAssistance()
+  const { assist } = useAssistance()
 
   useEffect(() => {
     getPermission()
@@ -71,12 +71,9 @@ const AssistenceSession = ({
   }
 
   const confirmAssistance = async () => {
-    const response = await createAssistance(
+    const response = await assist(
       {
-        assistanceCategoryId: 1,
         courseId: deviceOnQr.qr?.courseId!,
-        date: new Date().toISOString(),
-        observations: '',
         studentId: device.studentId!,
         qrId: deviceOnQr.qrId
       },

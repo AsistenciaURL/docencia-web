@@ -48,6 +48,16 @@ const useStudents = () => {
     }
   }
 
+  const unassign = async (courseId: number, studentId: string) => {
+    setLoading(true)
+    const response = await fetchCustomAPI(`unassign/`, 'POST', {
+      courseId,
+      studentId
+    })
+    setLoading(false)
+    return response
+  }
+
   const getStudent = async (studentId: string) => {
     setLoading(true)
     const response = await fetchSingleAPI<Student>('students', studentId)
@@ -62,7 +72,8 @@ const useStudents = () => {
     loading,
     createStudents,
     student,
-    getStudent
+    getStudent,
+    unassign
   }
 }
 

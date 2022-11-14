@@ -1,9 +1,10 @@
 import { Divider } from '@mui/material'
 import PrimaryButton from 'components/core/PrimaryButton'
 import SecondaryButton from 'components/core/SecondaryButton'
-import StudentListItem from 'components/core/StudentListItem'
+import StudentListItem from 'components/courses/StudentListItem'
+import { SnackbarContext } from 'context/SnackbarProvider'
 import useStudents from 'hooks/useStudents'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { read, utils } from 'xlsx'
 
 type Student = {
@@ -23,6 +24,7 @@ const UploadXsls = ({ id, reload }: Props) => {
   const [students, setStudents] = useState<Student[]>([])
 
   const { createStudents } = useStudents()
+  const { openSnackbar } = useContext(SnackbarContext)
 
   const readUploadFile = (e: any) => {
     e.preventDefault()
@@ -53,23 +55,41 @@ const UploadXsls = ({ id, reload }: Props) => {
   }
 
   const confirmStudents = async () => {
+    setLoading(true)
     await createStudents(students, id)
+    openSnackbar({
+      message: 'Estudiantes agregados correctamente.',
+      severity: 'success'
+    })
+    setLoading(false)
+    setStudents([])
     reload()
   }
 
   return (
-    <div className="">
-      <form>
-        <input
-          type="file"
-          name="upload"
-          id="upload"
-          onChange={readUploadFile}
-          className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4
+    <div>
+      <div className="flex justify-between">
+        <form>
+          <input
+            type="file"
+            name="upload"
+            id="upload"
+            onChange={readUploadFile}
+            className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4
            file:rounded-sm file:border-0 file:text-sm file:font-semibold 
            file:bg-[#8396B8] file:text-white hover:file:bg-violet-100 mt-2 transition-all"
-        />
-      </form>
+          />
+        </form>
+        {students.length > 0 && (
+          <div className="md:w-1/4 h-10">
+            
+            <PrimaryButton
+              label="Confirmar estudiantes"
+              onClick={() => confirmStudents()}
+            />
+          </div>
+        )}
+      </div>
       <div>
         {students.map((student, index) => (
           <div key={student['No. Carnet']}>
@@ -95,12 +115,6 @@ const UploadXsls = ({ id, reload }: Props) => {
             <Divider />
           </div>
         ))}
-        <div className="md:w-1/4 mt-4">
-          <PrimaryButton
-            label="Confirmar estudiantes"
-            onClick={() => confirmStudents()}
-          />
-        </div>
       </div>
     </div>
   )

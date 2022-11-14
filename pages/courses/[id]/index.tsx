@@ -5,8 +5,8 @@ import { useRouter } from 'next/router'
 import { ReactNode, SyntheticEvent, useEffect, useState } from 'react'
 
 import QrCodeIcon from '@mui/icons-material/QrCode'
-import StudentTable from 'components/core/StudentTable'
-import QRTable from 'components/core/QRTable'
+import StudentTable from 'components/courses/StudentTable'
+import QRTable from 'components/courses/QRTable'
 import AssessmentIcon from '@mui/icons-material/Assessment'
 
 export async function getServerSideProps({ query }: { query: { id: string } }) {

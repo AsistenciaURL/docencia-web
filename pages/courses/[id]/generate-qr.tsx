@@ -1,14 +1,15 @@
 import { useContext, useState } from 'react'
 
-import { Button, TextField } from '@mui/material'
+import { TextField } from '@mui/material'
 import { TimePicker } from '@mui/x-date-pickers/TimePicker'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import dayjs, { Dayjs } from 'dayjs'
-import QRCode from 'react-qr-code'
 import useQR from 'hooks/useQR'
 import { SnackbarContext } from 'context/SnackbarProvider'
 import LocationPicker from 'components/geo/LocationPicker'
+import PrimaryButton from 'components/core/PrimaryButton'
+import { useRouter } from 'next/router'
 
 export async function getServerSideProps({ query }: { query: { id: string } }) {
   const { id } = query
@@ -18,30 +19,30 @@ export async function getServerSideProps({ query }: { query: { id: string } }) {
 }
 
 const GenerateQR = ({ id }: { id: string }) => {
-  const [generatedQR, setGeneratedQR] = useState<string | undefined>(undefined)
-  const [show, setShow] = useState(false)
   const [value, setValue] = useState<Dayjs>(dayjs(new Date().toISOString()))
+  const [loading, setLoading] = useState(false)
   const { openSnackbar } = useContext(SnackbarContext)
-  const [location, setLocation] = useState<any>({})
+  const [location, setLocation] = useState<any>({
+    lat: 14.840616282368563,
+    lng: -91.51823879677619
+  })
+
+  const router = useRouter()
 
   const { createQR } = useQR()
 
   const handleChange = (newValue: Dayjs | null) => {
     if (newValue) {
-      console.log(newValue.format('YYYY-MM-DD HH:mm:ss'))
       setValue(newValue)
-      // const datetime = newValue.format('YYYY-MM-DD HH:mm:ss')
-      // const assistanceUrl = id + datetime
-      // setGeneratedQR(`http://localhost:3000/assistance/${assistanceUrl}`)
     }
   }
 
   const generate = async () => {
+    setLoading(true)
     const datetime = value.toDate().toISOString()
     console.log(value >= dayjs(new Date()))
     if (location.lat !== undefined && location.lng !== undefined) {
       if (value >= dayjs(new Date())) {
-        setShow(true)
         const response = await createQR(
           id,
           datetime,
@@ -49,11 +50,12 @@ const GenerateQR = ({ id }: { id: string }) => {
           location.lng
         )
         if (response.status === 'success' && response.data) {
-          setGeneratedQR(`http://localhost:3000/assistance/${response.data.id}`)
           openSnackbar({
             message: 'QR generado correctamente',
             severity: 'success'
           })
+          setLoading(false)
+          router.push(`/courses/${id}/${response.data.id}/new`)
         } else {
           openSnackbar({
             message: 'Hubo un error al crear el QR',
@@ -67,23 +69,59 @@ const GenerateQR = ({ id }: { id: string }) => {
         })
       }
     }
+    setLoading(false)
   }
 
   return (
     <>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <TimePicker
-          label="Time"
-          value={value}
-          onChange={handleChange}
-          renderInput={(params) => <TextField {...params} />}
-        />
-        <LocationPicker setDefaultLocation={setLocation} />
+        <div className="w-screen flex items-center flex-col justify-center">
+          <div className="w-3/5">
+            <div className="my-4 flex justify-around items-center">
+              <TimePicker
+                label="Hora límite de asistencia"
+                value={value}
+                onChange={handleChange}
+                renderInput={(params) => <TextField {...params} />}
+              />
+              <PrimaryButton
+                full={false}
+                margin={false}
+                label="Edificio Hermano Pedro"
+                onClick={() =>
+                  setLocation({
+                    lat: 14.848653102998583,
+                    lng: -91.5240752970689
+                  })
+                }
+              />
+              <PrimaryButton
+                margin={false}
+                full={false}
+                label="Edificio URL Central"
+                onClick={() =>
+                  setLocation({
+                    lat: 14.840616282368563,
+                    lng: -91.51823879677619
+                  })
+                }
+              />
+            </div>
+            <LocationPicker
+              defaultLocation={location}
+              setDefaultLocation={setLocation}
+            />
+            <div className="w-full flex justify-center my-4">
+              <PrimaryButton
+                label="Generar QR"
+                onClick={() => generate()}
+                disabled={loading}
+                loading={loading}
+              />
+            </div>
+          </div>
+        </div>
       </LocalizationProvider>
-      <div className="w-screen flex justify-center">
-        <Button onClick={() => generate()}>Generar QR</Button>
-        {show && generatedQR && <QRCode value={generatedQR} />}
-      </div>
     </>
   )
 }

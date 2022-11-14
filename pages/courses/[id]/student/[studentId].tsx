@@ -4,23 +4,24 @@ import { useEffect } from 'react'
 export async function getServerSideProps({
   query
 }: {
-  query: { qrId: string }
+  query: { studentId: string; id: string }
 }) {
-  const { qrId } = query
+  const { studentId, id } = query
   return {
-    props: { qrId }
+    props: { studentId, courseId: id }
   }
 }
 
 type Props = {
-  qrId: string
+  studentId: string
+  courseId: string
 }
 
-const QrIndex = ({ qrId }: Props) => {
-  const { getAssistanceWithQr, assistances } = useAssistance()
+const QrIndex = ({ studentId, courseId }: Props) => {
+  const { getAssistanceWithStudentId, assistances } = useAssistance()
 
   useEffect(() => {
-    getAssistanceWithQr(qrId)
+    getAssistanceWithStudentId(studentId, courseId)
   }, [])
 
   useEffect(() => {
@@ -29,7 +30,7 @@ const QrIndex = ({ qrId }: Props) => {
 
   return (
     <div>
-      <div>{qrId}</div>
+      <div>{studentId}</div>
       <div>
         {assistances.map((assistance) => (
           <div key={assistance.id} className="flex">

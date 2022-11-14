@@ -1,7 +1,10 @@
-import { Button } from '@mui/material'
+import { Divider } from '@mui/material'
+import PrimaryButton from 'components/core/PrimaryButton'
+import SecondaryButton from 'components/core/SecondaryButton'
+import StudentListItem from 'components/courses/StudentListItem'
+import { SnackbarContext } from 'context/SnackbarProvider'
 import useStudents from 'hooks/useStudents'
-import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { read, utils } from 'xlsx'
 
 type Student = {
@@ -18,9 +21,10 @@ type Props = {
 }
 
 const UploadXsls = ({ id, reload }: Props) => {
-  const [students, setStudents] = useState<any[]>([])
+  const [students, setStudents] = useState<Student[]>([])
 
   const { createStudents } = useStudents()
+  const { openSnackbar } = useContext(SnackbarContext)
 
   const readUploadFile = (e: any) => {
     e.preventDefault()
@@ -51,45 +55,66 @@ const UploadXsls = ({ id, reload }: Props) => {
   }
 
   const confirmStudents = async () => {
+    setLoading(true)
     await createStudents(students, id)
+    openSnackbar({
+      message: 'Estudiantes agregados correctamente.',
+      severity: 'success'
+    })
+    setLoading(false)
+    setStudents([])
     reload()
   }
 
   return (
-    <div className="">
-      <form>
-        <input
-          type="file"
-          name="upload"
-          id="upload"
-          onChange={readUploadFile}
-          className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4
+    <div>
+      <div className="flex justify-between">
+        <form>
+          <input
+            type="file"
+            name="upload"
+            id="upload"
+            onChange={readUploadFile}
+            className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4
            file:rounded-sm file:border-0 file:text-sm file:font-semibold 
-           file:bg-[#8396B8] file:text-white hover:file:bg-violet-100 mt-2"
-        />
-      </form>
+           file:bg-[#8396B8] file:text-white hover:file:bg-violet-100 mt-2 transition-all"
+          />
+        </form>
+        {students.length > 0 && (
+          <div className="md:w-1/4 h-10">
+            
+            <PrimaryButton
+              label="Confirmar estudiantes"
+              onClick={() => confirmStudents()}
+            />
+          </div>
+        )}
+      </div>
       <div>
         {students.map((student, index) => (
-          <div key={student['No. Carnet']} className="flex justify-between">
-            <div>{student['Nombre completo']}</div>
-            <Button
-              className="border-black border-2"
-              onClick={() =>
-                setStudents((oldArray) =>
-                  oldArray.filter((stundent, i) => i !== index)
-                )
-              }
-            >
-              eliminar
-            </Button>
+          <div key={student['No. Carnet']}>
+            <div className="md:flex justify-between">
+              <div className="w-full">
+                <StudentListItem
+                  email={student['Cuenta oficial URL']}
+                  name={student['Nombre completo']}
+                  id={student['No. Carnet'].toString()}
+                />
+              </div>
+              <div className="">
+                <SecondaryButton
+                  label="Eliminar"
+                  onClick={() =>
+                    setStudents((oldArray) =>
+                      oldArray.filter((stundent, i) => i !== index)
+                    )
+                  }
+                />
+              </div>
+            </div>
+            <Divider />
           </div>
         ))}
-        <button
-          className="text-white bg-[#082E71] hover:bg-white hover:text-[#082E71] font-small rounded-lg text-base px-5 py-2.5 text-center m-2"
-          onClick={() => confirmStudents()}
-        >
-          Confirmar estudiantes
-        </button>
       </div>
     </div>
   )

@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography'
 import AssistanceForm from 'components/assistance/AssitanceForm'
 import Empty from 'layouts/Empty'
 import PrimaryButton from 'components/core/PrimaryButton'
-import StudentListItem from 'components/core/StudentListItem'
+import StudentListItem from 'components/courses/StudentListItem'
 import useDevices from 'hooks/useDevices'
 import useQR from 'hooks/useQR'
 import useAssistance from 'hooks/useAssistance'
@@ -36,7 +36,7 @@ const AssistenceSession = ({
   const [message, setMessage] = useState<boolean | string>(false)
   const { getDevice, device } = useDevices()
   const { getQrWithToken, deviceOnQr } = useQR()
-  const { createAssistance } = useAssistance()
+  const { assist } = useAssistance()
 
   useEffect(() => {
     getPermission()
@@ -71,12 +71,9 @@ const AssistenceSession = ({
   }
 
   const confirmAssistance = async () => {
-    const response = await createAssistance(
+    const response = await assist(
       {
-        assistanceCategoryId: 1,
         courseId: deviceOnQr.qr?.courseId!,
-        date: new Date().toISOString(),
-        observations: '',
         studentId: device.studentId!,
         qrId: deviceOnQr.qrId
       },

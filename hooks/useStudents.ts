@@ -48,6 +48,56 @@ const useStudents = () => {
     }
   }
 
+  const createStudent = async (
+    student: Student,
+    courseId: number
+  ): Promise<ApiResponse> => {
+    setLoading(true)
+    const studentExists = await fetchSingleAPI<Student>('students', student.id!)
+    if (studentExists.status !== 'success') {
+      await fetchPostAPI<Student>('students', {
+        email: student.email,
+        name: student.name,
+        faculty: student.faculty,
+        id: student.id!
+      })
+      await fetchCustomAPI(`assign/${student.id}`, 'POST', {
+        courseId: Number(courseId)
+      })
+    } else {
+      return {
+        status: 'error',
+        message: 'El estudiante ya esta registrado en la plataforma'
+      }
+    }
+
+    setLoading(false)
+    return {
+      status: 'success',
+      message: 'Estudiantes agregados correctamente'
+    }
+  }
+
+  const assignExistingStudent = async (studentId: string, courseId: string) => {
+    setLoading(true)
+    const response = await fetchCustomAPI('assign-existing', 'POST', {
+      studentId,
+      courseId
+    })
+    setLoading(false)
+    return response
+  }
+
+  const unassign = async (courseId: number, studentId: string) => {
+    setLoading(true)
+    const response = await fetchCustomAPI(`unassign/`, 'POST', {
+      courseId,
+      studentId
+    })
+    setLoading(false)
+    return response
+  }
+
   const getStudent = async (studentId: string) => {
     setLoading(true)
     const response = await fetchSingleAPI<Student>('students', studentId)
@@ -61,8 +111,11 @@ const useStudents = () => {
   return {
     loading,
     createStudents,
+    createStudent,
+    assignExistingStudent,
     student,
-    getStudent
+    getStudent,
+    unassign
   }
 }
 

@@ -10,7 +10,9 @@ const useCourses = () => {
   const getCourse = async (id: number) => {
     setLoading(true)
     const response = await fetchSingleAPI<Course>('courses', id)
-    setCourse(response.data!)
+    if (response.data) {
+      setCourse(response.data)
+    }
     setLoading(false)
   }
 

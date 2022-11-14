@@ -9,7 +9,7 @@ import Input from 'components/core/Input'
 import useStudents from 'hooks/useStudents'
 import { SnackbarContext } from 'context/SnackbarProvider'
 import PrimaryButton from 'components/core/PrimaryButton'
-import StudentListItem from 'components/core/StudentListItem'
+import StudentListItem from 'components/courses/StudentListItem'
 import useDevices from 'hooks/useDevices'
 
 type FormValues = {
@@ -30,7 +30,7 @@ const AssistanceForm = ({
   const [showStudent, setShowStudent] = useState(false)
 
   const { openSnackbar } = useContext(SnackbarContext)
-  const { getStudent, student, loading } = useStudents()
+  const { getStudent, student } = useStudents()
   const { getStudentDevice, associateDevice } = useDevices()
   const { control, handleSubmit } = useForm<FormValues>({
     resolver: yupResolver(schema)

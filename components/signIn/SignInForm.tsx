@@ -4,7 +4,6 @@ import { useRouter } from 'next/router'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 
-import { HookResponse } from 'hooks/types'
 import Checkbox from 'components/core/Checkbox'
 import Input from 'components/core/Input'
 import useAuth from 'hooks/useAuth'
@@ -40,11 +39,7 @@ const SignInForm = () => {
   })
 
   const onSubmit = async (data: FormValues) => {
-    const response: HookResponse = await login(
-      data.email,
-      data.password,
-      data.remember
-    )
+    const response = await login(data.email, data.password, data.remember)
     if (response.status === 'success') {
       router.push('/home')
     }

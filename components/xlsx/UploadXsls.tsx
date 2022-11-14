@@ -22,6 +22,7 @@ type Props = {
 
 const UploadXsls = ({ id, reload }: Props) => {
   const [students, setStudents] = useState<Student[]>([])
+  const [loading, setLoading] = useState(false)
 
   const { createStudents } = useStudents()
   const { openSnackbar } = useContext(SnackbarContext)
@@ -82,10 +83,11 @@ const UploadXsls = ({ id, reload }: Props) => {
         </form>
         {students.length > 0 && (
           <div className="md:w-1/4 h-10">
-            
             <PrimaryButton
               label="Confirmar estudiantes"
               onClick={() => confirmStudents()}
+              disabled={loading}
+              loading={loading}
             />
           </div>
         )}

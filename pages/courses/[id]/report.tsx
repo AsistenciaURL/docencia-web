@@ -1,4 +1,4 @@
-import ExcelTable from 'components/xlsx/ExcelTable'
+import DeficientReport from 'components/xlsx/DeficientReport'
 import useCourses from 'hooks/useCourses'
 import React, { useEffect } from 'react'
 
@@ -20,11 +20,7 @@ const CourseStats = ({ id }: { id: string }) => {
     console.log(course)
   }, [course])
 
-  return (
-    <div>
-      {course.id && <ExcelTable course={course} />}
-    </div>
-  )
+  return <div>{course.id && <DeficientReport course={course} />}</div>
 }
 
 export default CourseStats

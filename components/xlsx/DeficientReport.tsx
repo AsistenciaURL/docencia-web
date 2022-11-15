@@ -20,7 +20,7 @@ type Comments = {
   }
 }
 
-export default function ExcelTable({ course }: Props) {
+export default function DeficientReport({ course }: Props) {
   const [editLabel, setEditLabel] = useState(
     '(Presione cada campo para editar)'
   )

@@ -10,7 +10,7 @@ import SecondaryButton from './SecondaryButton'
 
 type ConfirmDialogProps = {
   confirm: () => void
-  text: string
+  text: any
   title: string
   children: ReactNode
   onOpen: () => void

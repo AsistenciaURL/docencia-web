@@ -182,12 +182,11 @@ export default function DailyReport({ course, assistances, qr }: Props) {
               Porcentaje <br /> asistencia
             </th>
             <td colSpan={4}>
-              {assistances.filter(
+              {(assistances.filter(
                 (assistance) => assistance.assistanceCategoryId === 1
               ).length /
-                assistances.filter(
-                  (assistance) => assistance.assistanceCategoryId === 2
-                ).length}
+                assistances.length) *
+                100}
               %
             </td>
             <th colSpan={2}>&nbsp;</th>
@@ -211,7 +210,7 @@ export default function DailyReport({ course, assistances, qr }: Props) {
             <td colSpan={4}>
               {
                 assistances.filter(
-                  (assistance) => assistance.assistanceCategoryId === 2
+                  (assistance) => assistance.assistanceCategoryId !== 1
                 ).length
               }
             </td>

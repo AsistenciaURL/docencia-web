@@ -45,6 +45,31 @@ const useAssistance = () => {
     return response
   }
 
+  const changeCategory = async (assistanceId: number, categoryId: string) => {
+    setLoading(true)
+    // @ts-ignore
+    const response = await fetchPostAPI<Assistance>('change-assistance', {
+      id: Number(assistanceId),
+      assistanceCategoryId: Number(categoryId)
+    })
+    setLoading(false)
+    return response
+  }
+
+  const addObservations = async (
+    assistanceId: number,
+    observations: string
+  ) => {
+    setLoading(true)
+    // @ts-ignore
+    const response = await fetchPostAPI<Assistance>('add-obvervations', {
+      id: Number(assistanceId),
+      observations
+    })
+    setLoading(false)
+    return response
+  }
+
   const getAssistanceWithStudentId = async (
     studentId: string,
     courseId: string
@@ -67,7 +92,9 @@ const useAssistance = () => {
     getAssistanceWithStudentId,
     assist,
     loading,
-    assistances
+    assistances,
+    changeCategory,
+    addObservations
   }
 }
 

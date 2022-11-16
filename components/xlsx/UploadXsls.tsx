@@ -1,11 +1,13 @@
+import { useContext, useState } from 'react'
+
 import { Divider } from '@mui/material'
+import { read, utils } from 'xlsx'
+
+import { SnackbarContext } from 'context/SnackbarProvider'
 import PrimaryButton from 'components/core/PrimaryButton'
 import SecondaryButton from 'components/core/SecondaryButton'
 import StudentListItem from 'components/courses/StudentListItem'
-import { SnackbarContext } from 'context/SnackbarProvider'
 import useStudents from 'hooks/useStudents'
-import { useContext, useState } from 'react'
-import { read, utils } from 'xlsx'
 
 type Student = {
   'No. Carnet': number
@@ -27,30 +29,37 @@ const UploadXsls = ({ id, reload }: Props) => {
   const { openSnackbar } = useContext(SnackbarContext)
 
   const readUploadFile = (e: any) => {
-    e.preventDefault()
-    if (e.target.files) {
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        const data = e.target!.result
-        const workbook = read(data, { type: 'array' })
-        const sheetName = workbook.SheetNames[0]
-        const worksheet = workbook.Sheets[sheetName]
-        const json: Student[] = utils.sheet_to_json(worksheet)
-        const formatedStudents: Student[] = json.map((student) => {
-          return {
-            ...student,
-            'Nombre completo': student['Nombre completo']
-              .replaceAll('&Aacute;', 'Á')
-              .replaceAll('&Eacute;', 'É')
-              .replaceAll('&Iacute;', 'Í')
-              .replaceAll('&Oacute;', 'Ó')
-              .replaceAll('&Uacute;', 'Ú')
-          }
-        })
+    try {
+      e.preventDefault()
+      if (e.target.files) {
+        const reader = new FileReader()
+        reader.onload = (e) => {
+          const data = e.target!.result
+          const workbook = read(data, { type: 'array' })
+          const sheetName = workbook.SheetNames[0]
+          const worksheet = workbook.Sheets[sheetName]
+          const json: Student[] = utils.sheet_to_json(worksheet)
+          const formatedStudents: Student[] = json.map((student) => {
+            return {
+              ...student,
+              'Nombre completo': student['Nombre completo']
+                .replaceAll('&Aacute;', 'Á')
+                .replaceAll('&Eacute;', 'É')
+                .replaceAll('&Iacute;', 'Í')
+                .replaceAll('&Oacute;', 'Ó')
+                .replaceAll('&Uacute;', 'Ú')
+            }
+          })
 
-        setStudents(formatedStudents)
+          setStudents(formatedStudents)
+        }
+        reader.readAsArrayBuffer(e.target.files[0])
       }
-      reader.readAsArrayBuffer(e.target.files[0])
+    } catch (error) {
+      openSnackbar({
+        severity: 'error',
+        message: 'El archivo no pertece al listado de estudiantes.'
+      })
     }
   }
 
@@ -82,7 +91,6 @@ const UploadXsls = ({ id, reload }: Props) => {
         </form>
         {students.length > 0 && (
           <div className="md:w-1/4 h-10">
-            
             <PrimaryButton
               label="Confirmar estudiantes"
               onClick={() => confirmStudents()}

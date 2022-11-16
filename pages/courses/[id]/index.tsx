@@ -80,14 +80,14 @@ const Course = ({ id }: { id: number }) => {
           </CardContent>
         </Card>
         <Card
-          onClick={() => router.push(`/courses/${id}/stats`)}
+          onClick={() => router.push(`/courses/${id}/report`)}
           className=" bg-white rounded-xl drop-shadow-sm grid place-content-center text-center hover:cursor-pointer
           hover:opacity-60 md:w-1/3 w-full"
         >
           <p>
             <AssessmentIcon color="action" sx={{ fontSize: 55 }} />
           </p>
-          <p className="font-light text-gray-900">Ver estadísticas</p>
+          <p className="font-light text-gray-900">Generar reporte</p>
         </Card>
         <Card
           onClick={() => router.push(`/courses/${id}/generate-qr`)}

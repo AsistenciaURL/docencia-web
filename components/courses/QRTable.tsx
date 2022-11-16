@@ -11,6 +11,7 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Course from 'hooks/types/Course'
 import { useRouter } from 'next/router'
+import dayjs from 'dayjs'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -30,7 +31,7 @@ const QRTable = ({ course }: Props) => {
   const router = useRouter()
 
   return (
-    <div className="overflow-y-scroll h-[80%] bg-black rounded-2xl">
+    <div className="h-[80%] bg-black rounded-2xl">
       <TableContainer component={Paper}>
         <Table size="small">
           <TableHead>
@@ -39,6 +40,7 @@ const QRTable = ({ course }: Props) => {
               <StyledTableCell>Fecha de creación</StyledTableCell>
               <StyledTableCell>Tiempo activo</StyledTableCell>
               <StyledTableCell align="center">Ver asistencias</StyledTableCell>
+              <StyledTableCell align="center">Ver QR</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -48,10 +50,10 @@ const QRTable = ({ course }: Props) => {
                   {index + 1}
                 </StyledTableCell>
                 <StyledTableCell component="th" scope="row">
-                  {qr.initDate}
+                  {dayjs(qr.initDate).format('YYYY-MM-DD [Hora: ]HH:mm:ss')}
                 </StyledTableCell>
                 <StyledTableCell component="th" scope="row">
-                  {qr.limitDate}
+                  {dayjs(qr.limitDate).diff(qr.initDate, 'minute')} minutos
                 </StyledTableCell>
                 <StyledTableCell align="center">
                   <IconButton
@@ -59,6 +61,17 @@ const QRTable = ({ course }: Props) => {
                     size="small"
                     onClick={() =>
                       router.push(`/courses/${course.id}/${qr.id}`)
+                    }
+                  >
+                    <RemoveRedEyeOutlinedIcon fontSize="small" />
+                  </IconButton>
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  <IconButton
+                    color="primary"
+                    size="small"
+                    onClick={() =>
+                      router.push(`/courses/${course.id}/${qr.id}/new`)
                     }
                   >
                     <RemoveRedEyeOutlinedIcon fontSize="small" />

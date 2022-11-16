@@ -1,8 +1,13 @@
 import { useRouter } from 'next/router'
 import { signOut } from 'firebase/auth'
 import { auth } from 'services/Firebase'
+import { isAdmin } from 'services/Functions'
 
-const Navbar = () => {
+type NavbarProps = {
+  uid: string
+}
+
+const Navbar = ({ uid }: NavbarProps) => {
   const router = useRouter()
   const logOut = async () => {
     await signOut(auth)
@@ -29,6 +34,22 @@ const Navbar = () => {
         >
           Perfil
         </button>
+        {isAdmin(uid) && (
+          <>
+            <button
+              className="text-white hover:bg-[#0b357e] h-full px-6 font-semibold"
+              onClick={() => router.push('/students')}
+            >
+              Estudiantes
+            </button>
+            <button
+              className="text-white hover:bg-[#0b357e] h-full px-6 font-semibold"
+              onClick={() => router.push('/courses/list')}
+            >
+              Cursos
+            </button>
+          </>
+        )}
       </div>
       <div className="flex justify-end">
         <button

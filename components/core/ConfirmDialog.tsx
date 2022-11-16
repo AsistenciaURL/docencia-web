@@ -1,5 +1,4 @@
 import { ReactNode, useState } from 'react'
-import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
@@ -10,7 +9,7 @@ import SecondaryButton from './SecondaryButton'
 
 type ConfirmDialogProps = {
   confirm: () => void
-  text: string
+  text: any
   title: string
   children: ReactNode
   onOpen: () => void

@@ -1,4 +1,3 @@
-import PrimaryButton from 'components/core/PrimaryButton'
 import dynamic from 'next/dynamic'
 import { useEffect, useState } from 'react'
 // import MapPicker from 'react-google-map-picker'
@@ -8,24 +7,25 @@ const MapPicker = dynamic(() => import('react-google-map-picker'), {
 
 type Props = {
   setDefaultLocation: (Arg: { lat: number; lng: number }) => void
+  defaultLocation: { lat: number; lng: number }
 }
 
 const DefaultZoom = 18
 
-export default function ResponsiveDialog({ setDefaultLocation }: Props) {
+export default function ResponsiveDialog({
+  setDefaultLocation,
+  defaultLocation
+}: Props) {
   const [location, setLocation] = useState({
     lat: 14.840616282368563,
     lng: -91.51823879677619
   })
-  const [newLocation, setNewLocation] = useState<any>({
-    lat: 14.840616282368563,
-    lng: -91.51823879677619
-  })
+
   const [zoom, setZoom] = useState(DefaultZoom)
 
   useEffect(() => {
-    setDefaultLocation(newLocation)
-  }, [newLocation])
+    setDefaultLocation(defaultLocation)
+  }, [defaultLocation])
 
   function handleChangeLocation(lat: number, lng: number) {
     setDefaultLocation({ lat, lng })
@@ -38,27 +38,8 @@ export default function ResponsiveDialog({ setDefaultLocation }: Props) {
 
   return (
     <>
-      <label>Latitute:</label>
-      <input type="text" value={location.lat} disabled />
-      <label>Longitute:</label>
-      <input type="text" value={location.lng} disabled />
-      <label>Zoom:</label>
-      <input type="text" value={zoom} disabled />
-
-      <PrimaryButton
-        label="Edificio Hermano Pedro"
-        onClick={() =>
-          setNewLocation({ lat: 14.848653102998583, lng: -91.5240752970689 })
-        }
-      />
-      <PrimaryButton
-        label="Edificio URL Central"
-        onClick={() =>
-          setNewLocation({ lat: 14.840616282368563, lng: -91.51823879677619 })
-        }
-      />
       <MapPicker
-        defaultLocation={newLocation}
+        defaultLocation={defaultLocation}
         zoom={zoom}
         style={{ height: '500px' }}
         onChangeLocation={handleChangeLocation}

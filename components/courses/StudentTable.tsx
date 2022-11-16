@@ -1,22 +1,22 @@
 import { indigo } from '@mui/material/colors'
+import { SnackbarContext } from 'context/SnackbarProvider'
 import { styled } from '@mui/material/styles'
+import { useContext, useState } from 'react'
+import { useRouter } from 'next/router'
 import BarChartIcon from '@mui/icons-material/BarChart'
+import ConfirmDialog from '../core/ConfirmDialog'
+import Course from 'hooks/types/Course'
 import IconButton from '@mui/material/IconButton'
-import ModeIcon from '@mui/icons-material/Mode'
 import Paper from '@mui/material/Paper'
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
+import SecondaryButton from '../core/SecondaryButton'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell, { tableCellClasses } from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
-import Course from 'hooks/types/Course'
-import ConfirmDialog from './ConfirmDialog'
-import { useContext, useState } from 'react'
 import useStudents from 'hooks/useStudents'
-import { SnackbarContext } from 'context/SnackbarProvider'
-import { useRouter } from 'next/router'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -65,7 +65,7 @@ const StudentTable = ({ course, refetch }: Props) => {
   }
 
   return (
-    <div className="overflow-y-scroll h-[80%] rounded-2xl">
+    <div className="h-[80%] rounded-2xl">
       <TableContainer component={Paper}>
         <Table size="small">
           <TableHead>
@@ -95,10 +95,12 @@ const StudentTable = ({ course, refetch }: Props) => {
                     {student?.id}
                   </StyledTableCell>
                   <StyledTableCell align="center" component="th" scope="row">
-                    {status === 'Asignado' &&
-                      `${Math.round(
-                        (assistances! / course.classTotal!) * 100
-                      )}%`}
+                    {course?.classTotal! > 0
+                      ? status === 'Asignado' &&
+                        `${Math.round(
+                          (assistances! / course.classTotal!) * 100
+                        )}%`
+                      : 'Sin asistencias'}
                   </StyledTableCell>
                   <StyledTableCell align="center">
                     {status === 'Asignado' && (
@@ -133,6 +135,14 @@ const StudentTable = ({ course, refetch }: Props) => {
           </TableBody>
         </Table>
       </TableContainer>
+      <div className="w-full flex justify-center items-center pt-6 -mb-6">
+        <SecondaryButton
+          label="Asignar nuevo estudiante"
+          margin={false}
+          full={false}
+          onClick={() => router.push(`/courses/${course.id}/student/assign`)}
+        />
+      </div>
     </div>
   )
 }

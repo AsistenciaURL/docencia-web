@@ -1,10 +1,6 @@
 import { ReactNode, useContext, useEffect, useState } from 'react'
 
-import { Button } from '@mui/material'
-import { signOut } from 'firebase/auth'
 import { useRouter } from 'next/router'
-
-import { auth } from 'services/Firebase'
 import { SessionContext } from 'context/AuthProvider'
 
 import Navbar from 'components/navbar/Navbar'
@@ -27,16 +23,11 @@ const Default = ({ children }: Props) => {
     }
   }, [session])
 
-  const logOut = async () => {
-    await signOut(auth)
-    router.push('/sign-in')
-  }
-
   return (
     <div>
       {!loading && (
         <div className="bg-[#F3F4F6] h-screen overflow-y-auto overflow-x-hidden">
-          <Navbar />
+          {session.uid && <Navbar uid={session.uid} />}
           <div>{children}</div>
         </div>
       )}

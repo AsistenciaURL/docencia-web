@@ -1,4 +1,5 @@
 import CourseStudent from './CourseStudent'
+import Professor from './Professor'
 import Qr from './Qr'
 
 type Course = {
@@ -11,6 +12,7 @@ type Course = {
   professorId: string
 
   students?: CourseStudent[]
+  professor?: Professor
   qrs?: Qr[]
 }
 

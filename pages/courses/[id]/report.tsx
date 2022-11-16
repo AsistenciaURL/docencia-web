@@ -1,3 +1,4 @@
+import DeficientReport from 'components/xlsx/DeficientReport'
 import useCourses from 'hooks/useCourses'
 import React, { useEffect } from 'react'
 
@@ -19,18 +20,7 @@ const CourseStats = ({ id }: { id: string }) => {
     console.log(course)
   }, [course])
 
-  return (
-    <div>
-      <div>{course.name}</div>
-      <div>
-        {course.students?.map((student) => (
-          <div key={student.studentId} className="flex bg-black">
-            <div>{student.assistances}</div>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
+  return <div>{course.id && <DeficientReport course={course} />}</div>
 }
 
 export default CourseStats

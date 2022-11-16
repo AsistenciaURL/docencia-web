@@ -1,12 +1,12 @@
+import { ReactNode, SyntheticEvent, useEffect, useState } from 'react'
 import { Box, Card, CardContent, Tab, Tabs, Typography } from '@mui/material'
 import UploadXsls from 'components/xlsx/UploadXsls'
 import useCourses from 'hooks/useCourses'
 import { useRouter } from 'next/router'
-import { ReactNode, SyntheticEvent, useEffect, useState } from 'react'
 
 import QrCodeIcon from '@mui/icons-material/QrCode'
-import StudentTable from 'components/core/StudentTable'
-import QRTable from 'components/core/QRTable'
+import StudentTable from 'components/courses/StudentTable'
+import QRTable from 'components/courses/QRTable'
 import AssessmentIcon from '@mui/icons-material/Assessment'
 
 export async function getServerSideProps({ query }: { query: { id: string } }) {
@@ -80,14 +80,14 @@ const Course = ({ id }: { id: number }) => {
           </CardContent>
         </Card>
         <Card
-          onClick={() => router.push(`/courses/${id}/stats`)}
+          onClick={() => router.push(`/courses/${id}/report`)}
           className=" bg-white rounded-xl drop-shadow-sm grid place-content-center text-center hover:cursor-pointer
           hover:opacity-60 md:w-1/3 w-full"
         >
           <p>
             <AssessmentIcon color="action" sx={{ fontSize: 55 }} />
           </p>
-          <p className="font-light text-gray-900">Ver estadísticas</p>
+          <p className="font-light text-gray-900">Generar reporte</p>
         </Card>
         <Card
           onClick={() => router.push(`/courses/${id}/generate-qr`)}

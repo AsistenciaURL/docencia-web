@@ -2,6 +2,7 @@ import { TextField, Typography } from '@mui/material'
 import ConfirmDialog from 'components/core/ConfirmDialog'
 import PrimaryButton from 'components/core/PrimaryButton'
 import { SnackbarContext } from 'context/SnackbarProvider'
+import dayjs from 'dayjs'
 import Course from 'hooks/types/Course'
 import { useContext, useRef, useState } from 'react'
 import { useDownloadExcel } from 'react-export-table-to-excel'
@@ -168,7 +169,7 @@ export default function DeficientReport({ course }: Props) {
             <td colSpan={4}>{course.semester}</td>
             <td colSpan={2}>&nbsp;</td>
             <th colSpan={1}>Fecha</th>
-            <td colSpan={3}>Elfego</td>
+            <td colSpan={3}>{dayjs(new Date()).format('DD-MM-YYYY')}</td>
             <td colSpan={3}>&nbsp;</td>
           </tr>
           <tr>
@@ -207,6 +208,9 @@ export default function DeficientReport({ course }: Props) {
           </tr>
           {course.students
             ?.filter((assignment) => assignment.status === 'Asignado')
+            ?.filter(
+              (assigned) => assigned!.assistances! / course!.classTotal! < 0.65
+            )
             .map(({ student }) => (
               <tr key={student?.id}>
                 <td colSpan={1}>{student?.id}</td>
@@ -214,7 +218,7 @@ export default function DeficientReport({ course }: Props) {
                 <td colSpan={2}>{student?.faculty}</td>
                 <td
                   align="center"
-                  className="hover:bg-gray-200 cursor-pointer transition-colors"
+                  className="bg-yellow-50 hover:bg-gray-200 cursor-pointer transition-colors"
                   onClick={() => addCheck(student?.id!, 1)}
                   colSpan={1}
                 >
@@ -222,7 +226,7 @@ export default function DeficientReport({ course }: Props) {
                 </td>
                 <td
                   align="center"
-                  className="hover:bg-gray-200 cursor-pointer transition-colors"
+                  className="bg-yellow-50 hover:bg-gray-200 cursor-pointer transition-colors"
                   onClick={() => addCheck(student?.id!, 2)}
                   colSpan={1}
                 >
@@ -230,7 +234,7 @@ export default function DeficientReport({ course }: Props) {
                 </td>
                 <td
                   align="center"
-                  className="hover:bg-gray-200 cursor-pointer transition-colors"
+                  className="bg-yellow-50 hover:bg-gray-200 cursor-pointer transition-colors"
                   onClick={() => addCheck(student?.id!, 3)}
                   colSpan={1}
                 >
@@ -238,7 +242,7 @@ export default function DeficientReport({ course }: Props) {
                 </td>
                 <td
                   align="center"
-                  className="hover:bg-gray-200 cursor-pointer transition-colors"
+                  className="bg-yellow-50 hover:bg-gray-200 cursor-pointer transition-colors"
                   onClick={() => addCheck(student?.id!, 4)}
                   colSpan={1}
                 >
@@ -265,7 +269,7 @@ export default function DeficientReport({ course }: Props) {
                     }
                     title="Agregar observación"
                   >
-                    <div className="h-20 hover:bg-gray-200 cursor-pointer transition-colors">
+                    <div className="h-20 bg-yellow-50 hover:bg-gray-200 cursor-pointer transition-colors">
                       &nbsp; {studentData[student?.id ?? '']?.observation}
                     </div>
                   </ConfirmDialog>
@@ -277,13 +281,7 @@ export default function DeficientReport({ course }: Props) {
           </tr>
           <tr>
             <th align="left" colSpan={14}>
-              Comentarios {editLabel}
-            </th>
-          </tr>
-
-          <tr>
-            <th align="left" colSpan={14}>
-              &nbsp;
+              Comentarios
             </th>
           </tr>
           <tr>
@@ -305,17 +303,12 @@ export default function DeficientReport({ course }: Props) {
                 }
                 title="Agregar comentario final"
               >
-                <div className="h-8 hover:bg-gray-200 cursor-pointer transition-colors">
+                <div className="h-20 bg-yellow-50 hover:bg-gray-200 cursor-pointer transition-colors">
                   &nbsp;{' '}
                   {showFinalComment === '' ? editLabel2 : showFinalComment}
                 </div>
               </ConfirmDialog>
             </td>
-          </tr>
-          <tr>
-            <th align="left" colSpan={14}>
-              &nbsp;
-            </th>
           </tr>
         </tbody>
       </table>

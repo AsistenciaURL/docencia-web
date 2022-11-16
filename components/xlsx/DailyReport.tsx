@@ -2,6 +2,7 @@ import { TextField, Typography } from '@mui/material'
 import ConfirmDialog from 'components/core/ConfirmDialog'
 import PrimaryButton from 'components/core/PrimaryButton'
 import { SnackbarContext } from 'context/SnackbarProvider'
+import dayjs from 'dayjs'
 import Assistance from 'hooks/types/Assistance'
 import Course from 'hooks/types/Course'
 import Qr from 'hooks/types/Qr'
@@ -113,7 +114,7 @@ export default function DailyReport({ course, assistances, qr }: Props) {
             <td colSpan={4}>{course.semester}</td>
             <td colSpan={2}>&nbsp;</td>
             <th colSpan={1}>Fecha</th>
-            <td colSpan={3}>{qr.initDate}</td>
+            <td colSpan={3}>{dayjs(qr.initDate).format('DD-MM-YYYY')}</td>
             <td colSpan={3}>&nbsp;</td>
           </tr>
           <tr>
@@ -180,7 +181,15 @@ export default function DailyReport({ course, assistances, qr }: Props) {
             <th colSpan={1}>
               Porcentaje <br /> asistencia
             </th>
-            <td colSpan={4}>Matutina</td>
+            <td colSpan={4}>
+              {assistances.filter(
+                (assistance) => assistance.assistanceCategoryId === 1
+              ).length /
+                assistances.filter(
+                  (assistance) => assistance.assistanceCategoryId === 2
+                ).length}
+              %
+            </td>
             <th colSpan={2}>&nbsp;</th>
           </tr>
 
@@ -188,12 +197,24 @@ export default function DailyReport({ course, assistances, qr }: Props) {
             <th colSpan={1}>
               Estudiantes <br /> presentes
             </th>
-            <td colSpan={4}>Matutina</td>
+            <td colSpan={4}>
+              {
+                assistances.filter(
+                  (assistance) => assistance.assistanceCategoryId === 1
+                ).length
+              }
+            </td>
             <th colSpan={2}>&nbsp;</th>
             <th colSpan={1}>
               Estudiantes <br /> ausentes
             </th>
-            <td colSpan={4}>Matutina</td>
+            <td colSpan={4}>
+              {
+                assistances.filter(
+                  (assistance) => assistance.assistanceCategoryId === 2
+                ).length
+              }
+            </td>
             <th colSpan={2}>&nbsp;</th>
           </tr>
 

@@ -11,6 +11,7 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Course from 'hooks/types/Course'
 import { useRouter } from 'next/router'
+import dayjs from 'dayjs'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -49,10 +50,10 @@ const QRTable = ({ course }: Props) => {
                   {index + 1}
                 </StyledTableCell>
                 <StyledTableCell component="th" scope="row">
-                  {qr.initDate}
+                  {dayjs(qr.initDate).format('YYYY-MM-DD [Hora: ]HH:mm:ss') }
                 </StyledTableCell>
                 <StyledTableCell component="th" scope="row">
-                  {qr.limitDate}
+                  {dayjs(qr.limitDate).diff(qr.initDate, 'minute')} minutos
                 </StyledTableCell>
                 <StyledTableCell align="center">
                   <IconButton

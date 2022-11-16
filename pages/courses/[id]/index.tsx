@@ -1,8 +1,8 @@
+import { ReactNode, SyntheticEvent, useEffect, useState } from 'react'
 import { Box, Card, CardContent, Tab, Tabs, Typography } from '@mui/material'
 import UploadXsls from 'components/xlsx/UploadXsls'
 import useCourses from 'hooks/useCourses'
 import { useRouter } from 'next/router'
-import { ReactNode, SyntheticEvent, useEffect, useState } from 'react'
 
 import QrCodeIcon from '@mui/icons-material/QrCode'
 import StudentTable from 'components/courses/StudentTable'

@@ -30,11 +30,11 @@ const QrIndex = ({ studentId, courseId }: Props) => {
 
   return (
     <div>
-      <div>{studentId}</div>
+      <div className="bg-black ">{studentId}</div>
       <div>
         {assistances.map((assistance) => (
           <div key={assistance.id} className="flex">
-            <div>{assistance.student?.name}</div>
+            <div>{assistance.student?.name} </div>
             <div>{assistance.studentId}</div>
             <div>{assistance.assistanceCategory?.name}</div>
           </div>

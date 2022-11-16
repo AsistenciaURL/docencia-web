@@ -24,7 +24,7 @@ const CourseStats = ({ id }: { id: string }) => {
       <div>{course.name}</div>
       <div>
         {course.students?.map((student) => (
-          <div key={student.studentId} className="flex">
+          <div key={student.studentId} className="flex bg-black">
             <div>{student.assistances}</div>
           </div>
         ))}

@@ -10,13 +10,26 @@
     "lint:fix": "eslint --ext .js,.ts,.tsx . --fix"
   },
   "dependencies": {
-    "@emotion/react": "^11.10.4",
-    "@emotion/styled": "^11.10.4",
-    "@mui/material": "^5.10.7",
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@hookform/resolvers": "^2.9.9",
+    "@mui/icons-material": "^5.10.9",
+    "@mui/material": "^5.10.13",
+    "@mui/styles": "^5.10.10",
+    "@mui/x-date-pickers": "^5.0.5",
+    "dayjs": "^1.11.5",
+    "firebase": "^9.12.1",
     "next": "12.3.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-qr-code": "^2.0.8"
+    "react-export-table-to-excel": "^1.0.6",
+    "react-geolocated": "^4.0.3",
+    "react-google-map-picker": "^1.2.3",
+    "react-hook-form": "^7.38.0",
+    "react-location-picker": "^1.5.0",
+    "react-qr-code": "^2.0.8",
+    "xlsx": "^0.18.5",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@types/node": "18.7.23",

@@ -50,7 +50,7 @@ const QRTable = ({ course }: Props) => {
                   {index + 1}
                 </StyledTableCell>
                 <StyledTableCell component="th" scope="row">
-                  {dayjs(qr.initDate).format('YYYY-MM-DD [Hora: ]HH:mm:ss') }
+                  {dayjs(qr.initDate).format('YYYY-MM-DD [Hora: ]HH:mm:ss')}
                 </StyledTableCell>
                 <StyledTableCell component="th" scope="row">
                   {dayjs(qr.limitDate).diff(qr.initDate, 'minute')} minutos

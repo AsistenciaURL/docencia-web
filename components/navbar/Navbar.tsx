@@ -30,7 +30,7 @@ const Navbar = ({ uid }: NavbarProps) => {
         </button>
         <button
           className="text-white hover:bg-[#0b357e] h-full px-6 font-semibold"
-          onClick={() => router.push('/courses')}
+          onClick={() => router.push('/profile')}
         >
           Perfil
         </button>

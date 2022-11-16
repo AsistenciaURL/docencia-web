@@ -1,4 +1,6 @@
 import type { NextPage } from 'next'
+import Image from 'next/image'
+import profilePic from '../public/home.png'
 
 const Home: NextPage = () => {
   return (
@@ -15,8 +17,16 @@ const Home: NextPage = () => {
             Asistencias
           </p>
         </div>
-        <div className="py-52 px-6">
-          <img className="max-w-full h-auto" src="" alt="Profesor" />
+        <div className="grid place-items-center">
+          <Image
+            src={profilePic}
+            alt="Picture of the author"
+            width={450}
+            height={450}
+            quality={100}
+            // blurDataURL="data:..." automatically provided
+            // placeholder="blur" // Optional blur-up while loading
+          />
         </div>
       </div>
     </div>

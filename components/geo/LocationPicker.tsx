@@ -22,6 +22,7 @@ export default function ResponsiveDialog({
   })
 
   const [zoom, setZoom] = useState(DefaultZoom)
+  console.log(location)
 
   useEffect(() => {
     setDefaultLocation(defaultLocation)

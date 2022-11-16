@@ -1,22 +1,15 @@
 import { indigo } from '@mui/material/colors'
-import { SnackbarContext } from 'context/SnackbarProvider'
 import { styled } from '@mui/material/styles'
-import { useContext, useState } from 'react'
 import { useRouter } from 'next/router'
-import BarChartIcon from '@mui/icons-material/BarChart'
-import ConfirmDialog from '../core/ConfirmDialog'
 import Course from 'hooks/types/Course'
 import IconButton from '@mui/material/IconButton'
 import Paper from '@mui/material/Paper'
-import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
-import SecondaryButton from '../core/SecondaryButton'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell, { tableCellClasses } from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
-import useStudents from 'hooks/useStudents'
 import RemoveRedEyeOutlined from '@mui/icons-material/RemoveRedEyeOutlined'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -34,34 +27,7 @@ type Props = {
 }
 
 const CoursesTable = ({ courses }: Props) => {
-  const [selectedStudent, setSelectedStudent] = useState<string | undefined>(
-    undefined
-  )
-  const { openSnackbar } = useContext(SnackbarContext)
   const router = useRouter()
-
-  const { unassign } = useStudents()
-
-  // const handleConfirm = async () => {
-  //   const response = await unassign(course.id!, selectedStudent!)
-  //   if (response.status === 'success') {
-  //     openSnackbar({
-  //       message: 'Estudiante desasignado correctamente.',
-  //       severity: 'success'
-  //     })
-  //   } else {
-  //     openSnackbar({
-  //       message: 'Hubo un error al desasignar al estudiante',
-  //       severity: 'error'
-  //     })
-  //   }
-  // }
-
-  const handleOpen = (id?: string) => {
-    if (id) {
-      setSelectedStudent(id)
-    }
-  }
 
   return (
     <div className="h-[80%] rounded-2xl">

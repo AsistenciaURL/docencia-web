@@ -6,7 +6,6 @@ import * as yup from 'yup'
 import { SnackbarContext } from 'context/SnackbarProvider'
 import { useContext } from 'react'
 import Input from 'components/core/Input'
-import { SessionContext } from 'context/AuthProvider'
 import useStudents from 'hooks/useStudents'
 import PrimaryButton from 'components/core/PrimaryButton'
 
@@ -30,7 +29,6 @@ type AssignStudentFormProps = {
 
 const AssignStudentForm = ({ courseId }: AssignStudentFormProps) => {
   const { openSnackbar } = useContext(SnackbarContext)
-  const { session } = useContext(SessionContext)
   const { loading, assignExistingStudent } = useStudents()
 
   const router = useRouter()
